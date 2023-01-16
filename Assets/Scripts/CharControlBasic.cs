@@ -13,7 +13,8 @@ public class CharControlBasic : MonoBehaviour
     [SerializeField] private float slideslow = 3;
     private float currGravity;
     private bool sprinting = false;
-    private bool wallsliding = true;
+    private bool wallsliding = false;
+    private Vector3 lockedWallVelocity;
 
     private void Start()
     {
@@ -27,15 +28,28 @@ public class CharControlBasic : MonoBehaviour
         if (groundedPlayer && playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
+            wallsliding = false; // MOVE THIS LATER
+        }
+
+        if (wallsliding && !Input.GetButton("Jump"))
+        {
+            wallsliding = false;
         }
 
         sprinting = Input.GetKey(KeyCode.LeftShift);
 
         Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        if (wallsliding)
+        {
+            move = lockedWallVelocity * Time.deltaTime * playerSpeed;
+        }
+        else
+        {
+            move = gameObject.transform.rotation * move * Time.deltaTime * playerSpeed;
+        }
         if (sprinting) move *= 2;
-        move = gameObject.transform.rotation * move * Time.deltaTime * playerSpeed;
         move.y = 0;
-        controller.Move( move);
+        controller.Move(move);
 
         // Changes the height position of the player..
         if (Input.GetButtonDown("Jump") && groundedPlayer)
@@ -47,14 +61,22 @@ public class CharControlBasic : MonoBehaviour
        
         playerVelocity.y += currGravity * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+    
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.gameObject.CompareTag("WALL") && Input.GetButton("Jump"))
+        if (hit.gameObject.CompareTag("WALL") && Input.GetButtonDown("Jump") && !controller.isGrounded)
         {
-            Debug.Log("TEST");
-            currGravity /= slideslow;
+            Debug.Log("Wall Sliding");
+            wallsliding = true;
+            // the velocity should be based on the move vector from update instead of direction facing
+            lockedWallVelocity = Vector3.Project(gameObject.transform.forward, hit.gameObject.transform.right);
+            Debug.Log($"Wall Sliding Velocity: {lockedWallVelocity}");
+            if (playerVelocity.y < 0)
+            {
+                currGravity /= slideslow; // only slow descent
+            }
         }
     }
 }
