@@ -25,15 +25,17 @@ public class CharControlBasic : MonoBehaviour
     {
         currGravity = gravityValue;
         groundedPlayer = controller.isGrounded;
+        bool wallJump = false;
         if (groundedPlayer && playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
-            wallsliding = false; // MOVE THIS LATER
+            wallsliding = false;
         }
 
         if (wallsliding && !Input.GetButton("Jump"))
         {
             wallsliding = false;
+            wallJump = true;
         }
 
         sprinting = Input.GetKey(KeyCode.LeftShift);
@@ -52,7 +54,7 @@ public class CharControlBasic : MonoBehaviour
         controller.Move(move);
 
         // Changes the height position of the player..
-        if (Input.GetButtonDown("Jump") && groundedPlayer)
+        if (Input.GetButtonDown("Jump") && groundedPlayer || wallJump)
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * currGravity);
         }
