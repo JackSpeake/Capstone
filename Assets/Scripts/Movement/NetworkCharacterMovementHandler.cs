@@ -73,7 +73,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
         {
             Debug.Log("Wall Sliding");
             wallSliding = true;
-            lockedWallVelocity = Vector3.Project(gameObject.transform.forward, hit.gameObject.transform.right);
+            lockedWallVelocity = Vector3.Project(hit.gameObject.transform.forward, hit.gameObject.transform.right);
         }
     }
 }
