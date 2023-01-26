@@ -7,6 +7,7 @@ public class CharacterInputHandler : MonoBehaviour
     Vector2 moveInputVector = Vector2.zero;
     Vector2 viewInputVector = Vector2.zero;
     bool jump = false;
+    bool jumpHeld = false;
 
     LocalCameraHandler localCameraHandler;
     private void Awake()
@@ -38,6 +39,11 @@ public class CharacterInputHandler : MonoBehaviour
             jump = true;
         }
 
+        if (Input.GetButton("Jump"))
+        {
+            jumpHeld = true; // Separate check to see if player is holding down space to maintain a wall slide
+        }
+
         localCameraHandler.SetViewInputVector(viewInputVector);
     }
 
@@ -47,8 +53,10 @@ public class CharacterInputHandler : MonoBehaviour
         networkInputData.aimForwardVector = localCameraHandler.transform.forward;
         networkInputData.movementInput = moveInputVector;
         networkInputData.jumpPressed = jump;
+        networkInputData.jumpHeld = jumpHeld;
 
         jump = false;
+        jumpHeld = false;
 
         return networkInputData;
     }
