@@ -194,8 +194,13 @@ MonoBehaviour:
   gravity: -20
   jumpImpulse: 8
   acceleration: 50
+  airAcceleration: 0
+  groundAcceleration: 10
   braking: 30
   maxSpeed: 6
+  maxSpeedAir: 25
+  maxSpeedG: 6
+  VelMult: 1
   rotationSpeed: 1000
   viewUpDownRotationSpeed: 1000
   _IsGrounded: 0
@@ -213,6 +218,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  basevel: 1
+  speedReductionRate: 20
+  dashSpeed: 3
+  slideslow: 3
+  wallSlideGravity: 0
+  regularGraviity: 0
 --- !u!114 &6367010903159829220
 MonoBehaviour:
   m_ObjectHideFlags: 0

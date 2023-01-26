@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using System;
+using Photon;
 
 public class NetworkCharacterMovementHandler : NetworkBehaviour
 {
     NetworkCharacterControllerPrototype networkCharacterControllerPrototype;
     Camera localCamera;
     bool wallSliding = false;
+    bool dashed = false;
     NetworkInputData networkInputData;
+    [SerializeField] float basevel = 1.0f;
+    [SerializeField] float speedReductionRate = 1.0f;
     Vector3 lockedWallVelocity;
+    [SerializeField] float dashSpeed = 1.5f;
     [SerializeField] private float slideslow = 3;
     [SerializeField] private float wallSlideGravity; //Set to gravity value of character controller / slideslow by default
     [SerializeField] private float regularGraviity; // Set to gravity value of character controller by default
@@ -39,6 +44,15 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             rot.eulerAngles = new Vector3(0, rot.eulerAngles.y, rot.eulerAngles.z);
             transform.rotation = rot;
 
+            if (networkCharacterControllerPrototype.IsGrounded)
+                dashed = false;
+
+            if (!wallSliding && !dashed && !networkCharacterControllerPrototype.IsGrounded && networkInputData.dashPressed)
+            {
+                dashed = true;
+                networkCharacterControllerPrototype.VelMult *= dashSpeed;
+            }
+
             if (wallSliding && !networkInputData.jumpHeld)
             {
                 wallSliding = false;
@@ -59,6 +73,12 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                 }
             }
 
+            if (networkCharacterControllerPrototype.IsGrounded)
+            {
+                networkCharacterControllerPrototype.VelMult = 
+                    Mathf.Lerp(networkCharacterControllerPrototype.VelMult, basevel, Time.deltaTime * speedReductionRate);
+            }
+
             networkCharacterControllerPrototype.Move(moveDirection);
 
             // jump
@@ -73,7 +93,18 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
         {
             Debug.Log("Wall Sliding");
             wallSliding = true;
+            dashed = false;
             lockedWallVelocity = Vector3.Project(gameObject.transform.forward, hit.gameObject.transform.right);
         }
+    }
+
+    private IEnumerator AirDash()
+    {
+
+        networkCharacterControllerPrototype.gravity = .01f;
+
+        yield return new WaitForSeconds(.5f);
+
+        networkCharacterControllerPrototype.gravity = regularGraviity;
     }
 }
