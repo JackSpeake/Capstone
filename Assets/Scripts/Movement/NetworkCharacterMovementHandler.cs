@@ -13,11 +13,13 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     Vector3 lockedWallVelocity;
     [SerializeField] private float slideslow = 3;
     [SerializeField] private float wallSlideGravity; //Set to gravity value of character controller / slideslow by default
+    [SerializeField] private float regularGraviity; // Set to gravity value of character controller by default
 
     private void Awake()
     {
         networkCharacterControllerPrototype = GetComponent<NetworkCharacterControllerPrototype>();
         localCamera = GetComponentInChildren<Camera>();
+        regularGraviity = networkCharacterControllerPrototype.gravity;
         wallSlideGravity = networkCharacterControllerPrototype.gravity / slideslow;
     }
 
@@ -26,7 +28,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
         if (networkCharacterControllerPrototype.IsGrounded && wallSliding)
         {
             wallSliding = false;
-            networkCharacterControllerPrototype.gravity *= slideslow;
+            networkCharacterControllerPrototype.gravity = regularGraviity;
         }
         if (GetInput(out networkInputData))
         {
@@ -41,7 +43,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             {
                 wallSliding = false;
                 networkCharacterControllerPrototype.Jump(ignoreGrounded: true);
-                networkCharacterControllerPrototype.gravity *= slideslow;
+                networkCharacterControllerPrototype.gravity = regularGraviity;
             }
 
             // move
