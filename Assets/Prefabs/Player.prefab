@@ -194,7 +194,7 @@ MonoBehaviour:
   gravity: -20
   jumpImpulse: 8
   acceleration: 50
-  airAcceleration: 0
+  airAcceleration: 5
   groundAcceleration: 10
   braking: 30
   maxSpeed: 6
@@ -220,10 +220,13 @@ MonoBehaviour:
   _interpolationDataSource: 0
   basevel: 1
   speedReductionRate: 20
+  wallJumpEjectMultiplier: 5
   dashSpeed: 3
   slideslow: 3
   wallSlideGravity: 0
   regularGraviity: 0
+  wallJumpTime: 0.02
+  wallJumpTimer: 0.02
 --- !u!114 &6367010903159829220
 MonoBehaviour:
   m_ObjectHideFlags: 0
