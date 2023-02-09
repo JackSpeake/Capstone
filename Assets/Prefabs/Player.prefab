@@ -196,7 +196,7 @@ MonoBehaviour:
   acceleration: 50
   airAcceleration: 5
   groundAcceleration: 10
-  braking: 30
+  braking: 1
   maxSpeed: 6
   maxSpeedAir: 25
   maxSpeedG: 6

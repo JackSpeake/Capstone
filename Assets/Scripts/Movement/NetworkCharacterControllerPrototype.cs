@@ -15,6 +15,8 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
     public float airAcceleration = 1.0f;
     public float groundAcceleration = 10.0f;
     public float braking = 10.0f;
+    public float Airbraking = 0.3f;
+    public float Groundbraking = 10.0f;
     public float maxSpeed = 2.0f;
     public float maxSpeedAir = 100.0f;
     public float maxSpeedG = 2.0f;
@@ -93,6 +95,11 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
         }
     }
 
+    public void ShiftDirection(Vector3 direction)
+    {
+        Velocity = direction.normalized * Velocity.magnitude;
+    }
+
     /// <summary>
     /// Basic implementation of a character controller's movement function based on an intended direction.
     /// <param name="direction">Intended movement direction, subject to movement query, acceleration and max speed values.</param>
@@ -108,23 +115,19 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
         if (IsGrounded)
         {
             acceleration = groundAcceleration;
+            braking = Groundbraking;
             maxSpeed = Mathf.Lerp(maxSpeed, maxSpeedG, Time.deltaTime * 20.0f);
         }
         if (!IsGrounded)
         {
             acceleration = airAcceleration;
+            braking = Airbraking;
             maxSpeed = Mathf.Lerp(maxSpeed, maxSpeedAir, Time.deltaTime * 20.0f);
         }
 
-        if (IsGrounded && moveVelocity.y < 0)
-        {
-            moveVelocity.y = 0f;
-        }
-
-        moveVelocity.y += gravity * Runner.DeltaTime;
-
         var horizontalVel = default(Vector3);
         horizontalVel.x = moveVelocity.x;
+
         horizontalVel.z = moveVelocity.z;
         horizontalVel *= VelMult;
         VelMult = 1.0f;
@@ -138,6 +141,13 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
             horizontalVel = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
             //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
         }
+
+        if (IsGrounded && moveVelocity.y < 0)
+        {
+            moveVelocity.y = 0f;
+        }
+
+        moveVelocity.y += gravity * Runner.DeltaTime;
 
         moveVelocity.x = horizontalVel.x;
         moveVelocity.z = horizontalVel.z;
