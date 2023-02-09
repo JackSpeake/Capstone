@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class FloatAndRotate : MonoBehaviour
 {
-    private Transform startingPos;
+    private Vector3 startingPos;
+    private float startTime;
     [SerializeField] private float hoverRotate = 1f;
     [SerializeField] private float hoverHeight = .1f;
     [SerializeField] private float hoverSpeed = 1;
@@ -12,7 +13,7 @@ public class FloatAndRotate : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startingPos = transform;
+        startingPos = transform.position;
     }
 
     // Update is called once per frame
@@ -20,9 +21,10 @@ public class FloatAndRotate : MonoBehaviour
     {
         // not working
         transform.position = 
-            startingPos.position + 
-            new Vector3(0, 
-            Mathf.Lerp(hoverHeight * -1, hoverHeight, hoverSpeed * Time.deltaTime), 
+            startingPos + 
+            new Vector3(0,
+            Mathf.PingPong(hoverSpeed * Time.time, hoverHeight),
             0);
+        transform.Rotate(new Vector3(0, hoverRotate, 0));
     }
 }

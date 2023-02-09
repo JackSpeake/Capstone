@@ -186,6 +186,18 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             lockedWallVelocity = Vector3.Project(moveDirection, hit.gameObject.transform.right);
             hitWallNormal = hit.normal;
         }
+        if (hit.gameObject.CompareTag("RESETCUBE") && dashed)
+        {
+            dashed = false;
+        }
+    }
+
+
+    private IEnumerator DisableCube(GameObject cube)
+    {
+        cube.SetActive(false);
+        yield return new WaitForSeconds(3f);
+        cube.SetActive(true);
     }
 
     private IEnumerator AirDash()
