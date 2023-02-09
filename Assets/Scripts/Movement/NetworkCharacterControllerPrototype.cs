@@ -23,6 +23,8 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
     public float VelMult = 1.0f;
     public float rotationSpeed = 15.0f;
     public float viewUpDownRotationSpeed = 50.0f;
+    public float maxSpeedLerp = 10.0f;
+    public float strafeSpeed = 1.0f;
 
     [Networked]
     [HideInInspector]
@@ -116,13 +118,13 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
         {
             acceleration = groundAcceleration;
             braking = Groundbraking;
-            maxSpeed = Mathf.Lerp(maxSpeed, maxSpeedG, Time.deltaTime * 20.0f);
+            maxSpeed = Mathf.Lerp(maxSpeed, maxSpeedG, Time.deltaTime * maxSpeedLerp);
         }
         if (!IsGrounded)
         {
             acceleration = airAcceleration;
             braking = Airbraking;
-            maxSpeed = Mathf.Lerp(maxSpeed, maxSpeedAir, Time.deltaTime * 20.0f);
+            maxSpeed = Mathf.Lerp(maxSpeed, maxSpeedAir, Time.deltaTime * maxSpeedLerp);
         }
 
         var horizontalVel = default(Vector3);
@@ -136,10 +138,16 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
         {
             horizontalVel = Vector3.Lerp(horizontalVel, default, braking * deltaTime);
         }
-        else
+        else if (IsGrounded)
         {
             horizontalVel = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
             //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
+        }
+        else
+        {
+            var mag = horizontalVel.magnitude;
+            var originalDir = horizontalVel.normalized;
+            horizontalVel = Vector3.ClampMagnitude(Vector3.Lerp(originalDir, direction, deltaTime * strafeSpeed) * mag, maxSpeed);
         }
 
         if (IsGrounded && moveVelocity.y < 0)

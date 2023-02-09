@@ -193,10 +193,12 @@ MonoBehaviour:
   TargetInterpolationDelay: 0.03
   gravity: -20
   jumpImpulse: 8
-  acceleration: 50
-  airAcceleration: 5
+  acceleration: 75
+  airAcceleration: 0
   groundAcceleration: 10
   braking: 1
+  Airbraking: 0.3
+  Groundbraking: 10
   maxSpeed: 6
   maxSpeedAir: 25
   maxSpeedG: 6
@@ -222,7 +224,7 @@ MonoBehaviour:
   speedReductionRate: 20
   wallJumpEjectMultiplier: 5
   dashSpeed: 3
-  slideslow: 3
+  slideslow: 10
   wallSlideGravity: 0
   regularGraviity: 0
   wallJumpTime: 0.02
