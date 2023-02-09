@@ -70,6 +70,8 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     if (!dashed && networkInputData.dashPressed)
                     {
                         dashed = true;
+                        if (networkCharacterControllerPrototype.VelMult == 0)
+                            networkCharacterControllerPrototype.VelMult = 1;
                         networkCharacterControllerPrototype.VelMult *= dashSpeed;
                     }
                     break;
@@ -186,9 +188,16 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             lockedWallVelocity = Vector3.Project(moveDirection, hit.gameObject.transform.right);
             hitWallNormal = hit.normal;
         }
-        if (hit.gameObject.CompareTag("RESETCUBE") && dashed)
+        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("RESETCUBE") && dashed)
         {
             dashed = false;
+            StartCoroutine(DisableCube(other.gameObject));
+            Debug.Log("DASH RESET");
         }
     }
 
