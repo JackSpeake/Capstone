@@ -25,6 +25,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
     public float viewUpDownRotationSpeed = 50.0f;
     public float maxSpeedLerp = 10.0f;
     public float strafeSpeed = 1.0f;
+    public float bunnyHopSpeedMax = 2.0f;
 
     [Networked]
     [HideInInspector]
@@ -99,7 +100,8 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
 
     public void ShiftDirection(Vector3 direction)
     {
-        Velocity = direction.normalized * Velocity.magnitude;
+        Velocity = direction.normalized * Velocity.magnitude * VelMult;
+        VelMult = 1.0f;
     }
 
     /// <summary>
@@ -140,7 +142,11 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
         }
         else if (IsGrounded)
         {
-            horizontalVel = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
+            // Can cause unstrafable slide
+            var newSpeed = direction * acceleration * deltaTime;
+            if (horizontalVel.magnitude > maxSpeedG + bunnyHopSpeedMax)
+                newSpeed = Vector3.zero;
+            horizontalVel = Vector3.ClampMagnitude(horizontalVel + newSpeed, maxSpeed);
             //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
         }
         else

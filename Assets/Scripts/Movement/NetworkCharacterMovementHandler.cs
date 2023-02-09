@@ -70,10 +70,9 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     if (!dashed && networkInputData.dashPressed)
                     {
                         dashed = true;
-                        networkCharacterControllerPrototype.ShiftDirection(Camera.main.transform.forward);
-                        if (networkCharacterControllerPrototype.VelMult == 0)
-                            networkCharacterControllerPrototype.VelMult = 1;
                         networkCharacterControllerPrototype.VelMult *= dashSpeed;
+                        networkCharacterControllerPrototype.ShiftDirection(Camera.main.transform.forward);
+                        
                     }
                     break;
                 case PlayerState.WallSliding:
