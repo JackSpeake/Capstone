@@ -9,22 +9,36 @@ using UnityEngine;
 public class NetworkCharacterControllerPrototype : NetworkTransform
 {
     [Header("Character Controller Settings")]
+    [Tooltip("The rate at which people fall")]
     public float gravity = -20.0f;
+    [Tooltip("The initial magnitude of a jump")]
     public float jumpImpulse = 8.0f;
-    public float acceleration = 10.0f;
+    private float acceleration = 10.0f; // current value
+    [Tooltip("The rate the player accelerates in the air")]
     public float airAcceleration = 1.0f;
+    [Tooltip("The rate the player accelerates on the ground")]
     public float groundAcceleration = 10.0f;
-    public float braking = 10.0f;
+    private float braking = 10.0f; // current value
+    [Tooltip("The rate of breaking in the air")]
     public float Airbraking = 0.3f;
+    [Tooltip("The rate of breaking on the ground")]
     public float Groundbraking = 10.0f;
-    public float maxSpeed = 2.0f;
+    private float maxSpeed = 2.0f;
+    [Tooltip("The maximum speed in the air")]
     public float maxSpeedAir = 100.0f;
+    [Tooltip("The maximum speed on the ground")]
     public float maxSpeedG = 2.0f;
+    [Tooltip("The multiplyer for the next tick of movement")]
     public float VelMult = 1.0f;
+    [Tooltip("The speed at which the player rotates left and right")]
     public float rotationSpeed = 15.0f;
+    [Tooltip("The speed at which the player rotates up and down")]
     public float viewUpDownRotationSpeed = 50.0f;
+    [Tooltip("The speed at which the max speed changes between the ground and the air")]
     public float maxSpeedLerp = 10.0f;
+    [Tooltip("The strength of strafing speed loss")]
     public float strafeSpeed = 1.0f;
+    [Tooltip("The amount of air speed that can be preserved by bunny hopping")]
     public float bunnyHopSpeedMax = 2.0f;
 
     [Networked]
@@ -145,7 +159,11 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
             // Can cause unstrafable slide
             var newSpeed = direction * acceleration * deltaTime;
             if (horizontalVel.magnitude > maxSpeedG + bunnyHopSpeedMax)
+            {
+                // Project the new speed direction onto the right/left vector
+
                 newSpeed = Vector3.zero;
+            }
             horizontalVel = Vector3.ClampMagnitude(horizontalVel + newSpeed, maxSpeed);
             //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
         }

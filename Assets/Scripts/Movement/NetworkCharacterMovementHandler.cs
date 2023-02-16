@@ -22,17 +22,25 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     bool wallSliding = false;
     bool dashed = false;
     NetworkInputData networkInputData;
+    [Tooltip("The starting val for multiplying speed")]
     [SerializeField] float basevel = 1.0f;
+    [Tooltip("The rate at which speed is reduced actually idk what this does")]
     [SerializeField] float speedReductionRate = 1.0f;
     Vector3 lockedWallVelocity;
     Vector3 lockedWallDirection;
+    [Tooltip("The multiplier for speed gains when jumping off the wall")]
     [SerializeField] float wallJumpEjectMultiplier = 1.25f;
     Vector3 moveDirection;
+    [Tooltip("The amount of speed gained upon dashing")]
     [SerializeField] float dashSpeed = 1.5f;
+    [Tooltip("The slowdown when sliding")]
     [SerializeField] private float slideslow = 3;
-    [SerializeField] private float wallSlideGravity; //Set to gravity value of character controller / slideslow by default
-    [SerializeField] private float regularGraviity; // Set to gravity value of character controller by default
-    [SerializeField] private float wallJumpTime = 0.2f; // Time that the player is jumping away from the wall for
+    [Tooltip("Set to gravity value of character controller / slideslow by default")]
+    [SerializeField] private float wallSlideGravity;
+    [Tooltip("Set to gravity value of character controller by default")]
+    [SerializeField] private float regularGraviity; 
+    [Tooltip("Time that the player is jumping away from the wall for")]
+    [SerializeField] private float wallJumpTime = 0.2f; 
     private Vector3 wallJumpDirection;
     private float wallJumpTimer; // Keeps track of how long it's been since the player jumped off the wall
 
