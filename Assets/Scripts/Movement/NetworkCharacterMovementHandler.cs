@@ -25,15 +25,16 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     [SerializeField] float basevel = 1.0f;
     [SerializeField] float speedReductionRate = 1.0f;
     Vector3 lockedWallVelocity;
-    Vector3 hitWallNormal;
-    [SerializeField] float wallJumpEjectMultiplier = 10f;
+    Vector3 lockedWallDirection;
+    [SerializeField] float wallJumpEjectMultiplier = 1.25f;
     Vector3 moveDirection;
     [SerializeField] float dashSpeed = 1.5f;
     [SerializeField] private float slideslow = 3;
     [SerializeField] private float wallSlideGravity; //Set to gravity value of character controller / slideslow by default
     [SerializeField] private float regularGraviity; // Set to gravity value of character controller by default
     [SerializeField] private float wallJumpTime = 0.2f; // Time that the player is jumping away from the wall for
-    [SerializeField] private float wallJumpTimer = 0.2f; // Keeps track of how long it's been since the player jumped off the wall
+    private Vector3 wallJumpDirection;
+    private float wallJumpTimer; // Keeps track of how long it's been since the player jumped off the wall
 
     private void Awake()
     {
@@ -76,7 +77,12 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     }
                     break;
                 case PlayerState.WallSliding:
-                    moveDirection = lockedWallVelocity;
+                    moveDirection = lockedWallDirection;
+                    // Keep the x and z velocities the same but allow the y velocity to change (gravity eneds to work lol)
+                    lockedWallVelocity.y = networkCharacterControllerPrototype.Velocity.y;
+                    networkCharacterControllerPrototype.Velocity = lockedWallVelocity;
+                    Debug.Log($"Move Direction while wall sliding: {moveDirection}");
+                    Debug.Log($"Velocity while wall sliding: {networkCharacterControllerPrototype.Velocity}");
                     if (networkCharacterControllerPrototype.Velocity.y < 0) //Gravity only changed when falling so the player doesn't jump higher than intended
                     {
                         networkCharacterControllerPrototype.gravity = wallSlideGravity;
@@ -86,16 +92,22 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     {
                         // wallSliding = false;
                         state = PlayerState.WallJumping;
-                        networkCharacterControllerPrototype.Jump(ignoreGrounded: true);
                         networkCharacterControllerPrototype.gravity = regularGraviity;
                         wallJumpTimer = wallJumpTime;
-                        moveDirection = hitWallNormal * wallJumpEjectMultiplier;
+                        wallJumpDirection = Camera.main.transform.forward;
+                        //networkCharacterControllerPrototype.Jump(ignoreGrounded: true);
+                        if (networkCharacterControllerPrototype.VelMult == 0)
+                            networkCharacterControllerPrototype.VelMult = 1;
+                        networkCharacterControllerPrototype.VelMult *= wallJumpEjectMultiplier;
+                        networkCharacterControllerPrototype.ShiftDirection(wallJumpDirection);
+                        //moveDirection = hitWallNormal * wallJumpEjectMultiplier;
                     }
                     break;
                 case PlayerState.WallJumping:
                     if (wallJumpTimer > 0)
                     {
-                        moveDirection = hitWallNormal * wallJumpEjectMultiplier;
+                        moveDirection = wallJumpDirection;
+                        //moveDirection = hitWallNormal * wallJumpEjectMultiplier;
                         wallJumpTimer -= Time.deltaTime;
                     }
                     else
@@ -185,8 +197,8 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             // wallSliding = true;
             state = PlayerState.WallSliding;
             dashed = false;
-            lockedWallVelocity = Vector3.Project(moveDirection, hit.gameObject.transform.right);
-            hitWallNormal = hit.normal;
+            lockedWallVelocity = networkCharacterControllerPrototype.Velocity;
+            lockedWallDirection = Vector3.Project(moveDirection, hit.gameObject.transform.right);
         }
         
     }
