@@ -11,7 +11,8 @@ enum PlayerState
     InAir,
     WallSliding,
     WallJumping,
-    AirDashing
+    AirDashing,
+    Stumble
 }
 
 public class NetworkCharacterMovementHandler : NetworkBehaviour
@@ -126,6 +127,9 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                 case PlayerState.AirDashing:
                     // I have no idea if anything belongs here based on the old code because it doesn't seem like anything special happens
                     break;
+                case PlayerState.Stumble:
+                    AddForce(Vector3.down, 1.0f);
+                    break;
                 default:
                     Debug.Log("Something went very wrong here because the player is not in a proper state");
                     break;
@@ -223,6 +227,12 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             dashed = false;
             StartCoroutine(DisableCube(other.gameObject));
             Debug.Log("DASH RESET");
+        }
+        if (other.gameObject.CompareTag("HURT"))
+        {
+            Debug.Log("I got hurt");
+            state = PlayerState.Stumble;
+            dashed = false;
         }
     }
 
