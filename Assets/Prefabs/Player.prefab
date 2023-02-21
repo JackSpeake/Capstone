@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 8368423045328306357}
   - component: {fileID: 8276396762777740349}
   - component: {fileID: 6367010903159829220}
+  - component: {fileID: -5762057343084096823}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -144,6 +145,7 @@ MonoBehaviour:
   - {fileID: 4086477494810182419}
   - {fileID: 8368423045328306357}
   - {fileID: 8276396762777740349}
+  - {fileID: -5762057343084096823}
   SimulationBehaviours: []
 --- !u!143 &663703775032557845
 CharacterController:
@@ -193,13 +195,10 @@ MonoBehaviour:
   TargetInterpolationDelay: 0.03
   gravity: -20
   jumpImpulse: 9
-  acceleration: 75
   airAcceleration: 1
   groundAcceleration: 70
-  braking: 1
   Airbraking: 0.3
   Groundbraking: 23
-  maxSpeed: 7
   maxSpeedAir: 26
   maxSpeedG: 9
   VelMult: 1
@@ -231,7 +230,6 @@ MonoBehaviour:
   wallSlideGravity: 0
   regularGraviity: 0
   wallJumpTime: 0.02
-  wallJumpTimer: 0.02
 --- !u!114 &6367010903159829220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,6 +242,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bd71d3bb44e4e43b51fde4ffe57f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-5762057343084096823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501795056821901405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eadba9d2dd8144248bc47bb400115899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
 --- !u!1 &1501795057925943680
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Fusion;
 using UnityEngine;
 
@@ -193,5 +194,20 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
     public void Rotate(float rotationY)
     {
         transform.Rotate(0, rotationY * Runner.DeltaTime * rotationSpeed, 0);
+    }
+
+    public void AddForce(Vector3 direction, float force)
+    {
+        StartCoroutine(LerpMove(direction, force));
+    }
+
+    private IEnumerator LerpMove(Vector3 direction, float force)
+    {
+        float forceEachFrame = force / 10;
+        for (int i = 0; i < 10; i++)
+        {
+            Controller.Move(direction * forceEachFrame);
+            yield return new WaitForFixedUpdate();
+        }
     }
 }

@@ -10,4 +10,5 @@ public struct NetworkInputData : INetworkInput
     public bool jumpPressed;
     public bool jumpHeld;
     public bool dashPressed;
+    public bool selfItemPressed;
 }

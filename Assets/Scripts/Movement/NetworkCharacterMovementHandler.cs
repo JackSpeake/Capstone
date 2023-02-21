@@ -187,6 +187,11 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
         }*/
     }
 
+    public void AddForce(Vector3 direction, float force)
+    {
+        networkCharacterControllerPrototype.AddForce(direction, force);
+    }
+
     private void RotateCharacter()
     {
         // rotate
