@@ -46,7 +46,7 @@ public class GrappleCollectable : MonoBehaviour
     {
         Debug.Log("Grapple Shot");
         GameObject grapple = GameObject.Instantiate(grapplePrefab, playerWithItem.transform.position, Quaternion.identity);
-        grapple.GetComponent<Grapple>().StartShootRoutine();
+        grapple.GetComponent<Grapple>().StartShootRoutine(playerWithItem);
 
 
         // after the item has been used, get rid of the collectible

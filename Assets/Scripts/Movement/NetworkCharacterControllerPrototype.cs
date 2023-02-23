@@ -41,6 +41,8 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
     public float strafeSpeed = 1.0f;
     [Tooltip("The amount of air speed that can be preserved by bunny hopping")]
     public float bunnyHopSpeedMax = 2.0f;
+    [Tooltip("The base velocity dashes are applied to")]
+    public float standStillShiftSpeed = 20.0f;
 
     [Networked]
     [HideInInspector]
@@ -115,8 +117,16 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
 
     public void ShiftDirection(Vector3 direction)
     {
-        Velocity = direction.normalized * Velocity.magnitude * VelMult;
-        VelMult = 1.0f;
+        if (Velocity.magnitude > 10)
+        {
+            Velocity = direction.normalized * Velocity.magnitude * VelMult;
+            VelMult = 1.0f;
+        }
+        else
+        {
+            Velocity = direction.normalized * standStillShiftSpeed * VelMult;
+            VelMult = 1.0f;
+        }
     }
 
     /// <summary>
