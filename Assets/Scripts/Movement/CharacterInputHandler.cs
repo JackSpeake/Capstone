@@ -56,6 +56,7 @@ public class CharacterInputHandler : MonoBehaviour
             ePressed = true;
         }
 
+
         localCameraHandler.SetViewInputVector(viewInputVector);
     }
 
