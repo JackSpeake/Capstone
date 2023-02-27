@@ -6,8 +6,10 @@ using Fusion;
 
 public class PlayerItemManager : NetworkBehaviour
 {
-    public delegate void OnUseItem();
-    public event OnUseItem useItem;
+    public delegate void OnSelfUseItem();
+    public delegate void OnThrowItem();
+    public event OnSelfUseItem useItem;
+    public event OnThrowItem throwItem;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,11 @@ public class PlayerItemManager : NetworkBehaviour
             if (networkInputData.selfItemPressed)
             {
                 useItem?.Invoke();
+            }
+
+            if (networkInputData.throwItemPressed)
+            {
+                throwItem?.Invoke();
             }
         }
     }

@@ -14381,6 +14381,7 @@ MonoBehaviour:
   thrownSecondsBeforeExplosion: 5
   placedExposionRadius: 10
   thrownExplosionRadius: 5
+  throwForce: 5
   bombPrefab: {fileID: 1605200299544276317, guid: 7bb33167539ce6e419efa817c4d49da3, type: 3}
 --- !u!65 &1235751663
 BoxCollider:
@@ -30138,7 +30139,7 @@ GameObject:
   - component: {fileID: 2103495272}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: GROUND
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30150,7 +30151,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2103495271}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: ba123a7ca903cb044acfc38ff1446b5c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4

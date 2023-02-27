@@ -9,7 +9,7 @@ public class Bomb : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -43,5 +43,13 @@ public class Bomb : MonoBehaviour
             }
         }
         gameObject.SetActive(false);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("GROUND"))
+        {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+        }
     }
 }

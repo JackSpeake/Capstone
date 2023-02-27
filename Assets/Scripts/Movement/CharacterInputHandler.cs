@@ -10,6 +10,7 @@ public class CharacterInputHandler : MonoBehaviour
     bool jumpHeld = false;
     bool shift = false;
     bool ePressed = false;
+    bool qPressed = false;
 
     LocalCameraHandler localCameraHandler;
     private void Awake()
@@ -56,6 +57,11 @@ public class CharacterInputHandler : MonoBehaviour
             ePressed = true;
         }
 
+        if (Input.GetKey(KeyCode.Q))
+        {
+            qPressed = true;
+        }
+
 
         localCameraHandler.SetViewInputVector(viewInputVector);
     }
@@ -69,9 +75,11 @@ public class CharacterInputHandler : MonoBehaviour
         networkInputData.jumpHeld = jumpHeld;
         networkInputData.dashPressed = shift;
         networkInputData.selfItemPressed = ePressed;
+        networkInputData.throwItemPressed = qPressed;
 
         shift = false;
         ePressed = false;
+        qPressed = false;
 
         jump = false;
         jumpHeld = false;

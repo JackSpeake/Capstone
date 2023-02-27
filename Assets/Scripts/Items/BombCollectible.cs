@@ -12,7 +12,9 @@ public class BombCollectible : MonoBehaviour
     [Tooltip("The radius of the explosion when the bomb is placed (self use)")]
     public float placedExposionRadius = 5f;
     [Tooltip("The radius of the explosion when the bomb is thrown (disrupt enemy use)")]
-    public float thrownExplosionRadius = 5f;
+    public float thrownExplosionRadius = 15f;
+    [Tooltip("Force to throw the bomb")]
+    public float throwForce = 5f;
     [Tooltip("Bomb prefab")]
     public GameObject bombPrefab;
 
@@ -37,12 +39,20 @@ public class BombCollectible : MonoBehaviour
         StartCoroutine(PlacedBombExplosion());
     }
 
+    private void ThrowBomb()
+    {
+        Debug.Log("Bomb thrown");
+        itemManager.throwItem -= ThrowBomb;
+        StartCoroutine(ThrownBombExplosion());
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
             itemManager.useItem += PlaceBomb;
+            itemManager.throwItem += ThrowBomb;
             playerWithItem = other.gameObject;
 
             // Make it so no one else can pick up the item, don't wont to SetActive(false) because then the script stops working
@@ -57,6 +67,20 @@ public class BombCollectible : MonoBehaviour
         Vector3 initialPosition = new Vector3(playerWithItem.transform.position.x, 0f, playerWithItem.transform.position.z);
         GameObject bomb = GameObject.Instantiate(bombPrefab, initialPosition, Quaternion.identity);
         yield return new WaitForSeconds(placedSecondsBeforeExplosion);
+        bomb.GetComponent<Bomb>().ExplodeBomb(placedExposionRadius);
+        // after the item has been used, get rid of the collectible
+        gameObject.SetActive(false);
+    }
+
+    private IEnumerator ThrownBombExplosion()
+    {
+        Debug.Log("Bomb Thrown");
+        Vector3 initialPosition = Camera.main.transform.position;
+        Vector3 throwDirection = Camera.main.transform.forward;
+        Debug.Log(throwDirection);
+        GameObject bomb = GameObject.Instantiate(bombPrefab, initialPosition, Quaternion.identity);
+        bomb.GetComponent<Rigidbody>().AddForce(throwDirection * throwForce, ForceMode.Impulse);
+        yield return new WaitForSeconds(thrownSecondsBeforeExplosion);
         bomb.GetComponent<Bomb>().ExplodeBomb(placedExposionRadius);
         // after the item has been used, get rid of the collectible
         gameObject.SetActive(false);
