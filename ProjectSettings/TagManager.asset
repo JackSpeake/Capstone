@@ -8,7 +8,11 @@ TagManager:
   - RESETCUBE
   - HURT
   - GROUND
+<<<<<<< Updated upstream
   - COLLECTABLE
+=======
+  - COLLECTIBLE
+>>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX
