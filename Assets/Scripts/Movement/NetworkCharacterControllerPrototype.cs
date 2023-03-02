@@ -43,6 +43,8 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
     public float bunnyHopSpeedMax = 2.0f;
     [Tooltip("The base velocity dashes are applied to")]
     public float standStillShiftSpeed = 20.0f;
+    [Tooltip("The speed at which the player moves when sliding")]
+    public float slideWarp = .1f;
 
     [Networked]
     [HideInInspector]
@@ -173,7 +175,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
             {
                 // Project the new speed direction onto the right/left vector
 
-                newSpeed = Vector3.zero;
+                newSpeed = newSpeed * slideWarp;
             }
             horizontalVel = Vector3.ClampMagnitude(horizontalVel + newSpeed, maxSpeed);
             //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);

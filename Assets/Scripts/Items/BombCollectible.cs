@@ -17,6 +17,8 @@ public class BombCollectible : MonoBehaviour
     public float throwForce = 5f;
     [Tooltip("Bomb prefab")]
     public GameObject bombPrefab;
+    [Tooltip("WaitTime")]
+    public float waitBeforeRespawn = 3f;
 
     private PlayerItemManager itemManager;
     private GameObject playerWithItem;
@@ -58,8 +60,22 @@ public class BombCollectible : MonoBehaviour
             // Make it so no one else can pick up the item, don't wont to SetActive(false) because then the script stops working
             gameObject.GetComponent<BoxCollider>().enabled = false;
             gameObject.GetComponent<MeshRenderer>().enabled = false;
+            StartCoroutine("CauseStartAgain");
         }
     }
+
+    private IEnumerator CauseStartAgain()
+    {
+        yield return new WaitForSeconds(waitBeforeRespawn);
+        Respawn();
+    }
+
+    public void Respawn()
+    {
+        gameObject.GetComponent<BoxCollider>().enabled = true;
+        gameObject.GetComponent<MeshRenderer>().enabled = true;
+    }
+
 
     private IEnumerator PlacedBombExplosion()
     {

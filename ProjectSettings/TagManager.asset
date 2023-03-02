@@ -8,6 +8,7 @@ TagManager:
   - RESETCUBE
   - HURT
   - GROUND
+  - COLLECTABLE
   layers:
   - Default
   - TransparentFX

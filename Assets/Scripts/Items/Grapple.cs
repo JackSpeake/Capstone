@@ -49,7 +49,7 @@ public class Grapple : MonoBehaviour
                     yield return 0;
                 }
             }
-            else if (hit.transform.tag == "Player")
+            else if (hit.transform.CompareTag("Player"))
             {
                 objectHit = hit.transform;
                 Debug.Log("Cast hit: " + hit.transform.position);

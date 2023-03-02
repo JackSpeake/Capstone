@@ -27,6 +27,19 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             Debug.Log("Method Call: OnPlayerJoined");
         }
+
+        GameObject[] objects = GameObject.FindGameObjectsWithTag("COLLECTABLE");
+        foreach (GameObject o in objects)
+        {
+            if (o.GetComponent<BombCollectible>() != null)
+            {
+                o.GetComponent<BombCollectible>().Respawn();
+            }
+            else if (o.GetComponent<GrappleCollectable>() != null)
+            {
+                o.GetComponent<BombCollectible>().Respawn();
+            }
+        }
     }
 
     void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef player)
