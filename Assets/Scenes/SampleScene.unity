@@ -14410,6 +14410,7 @@ MonoBehaviour:
   throwForce: 5
   bombPrefab: {fileID: 1605200299544276317, guid: 7bb33167539ce6e419efa817c4d49da3, type: 3}
   waitBeforeRespawn: 3
+  bombSprite: {fileID: 21300000, guid: 7970085588b0db24aba31f5de9587934, type: 3}
 --- !u!65 &1235751663
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31968,6 +31969,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8661947028906738058, guid: 5154271cc58782648a45190479eab7ff, type: 3}
+      propertyPath: grappleSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 021d714882a717742a5f4c23ec9856ec, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5154271cc58782648a45190479eab7ff, type: 3}
 --- !u!1001 &7568543742589183563
