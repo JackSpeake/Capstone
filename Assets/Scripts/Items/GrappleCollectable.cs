@@ -8,6 +8,8 @@ public class GrappleCollectable : MonoBehaviour
     public GameObject grapplePrefab;
     [Tooltip("WaitTime")]
     public float waitBeforeRespawn = 3f;
+    [Tooltip("Grapple sprite")]
+    public Sprite grappleSprite;
 
     private PlayerItemManager itemManager;
     private GameObject playerWithItem;
@@ -25,7 +27,7 @@ public class GrappleCollectable : MonoBehaviour
 
     private void HoldGrapple()
     {
-        Debug.Log("Bomb used");
+        Debug.Log("Grapple used");
         itemManager.useItem -= HoldGrapple;
         GrappleShot();
     }
@@ -35,13 +37,17 @@ public class GrappleCollectable : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
-            itemManager.useItem += HoldGrapple;
-            playerWithItem = other.gameObject;
 
-            // Make it so no one else can pick up the item, don't wont to SetActive(false) because then the script stops working
-            gameObject.GetComponent<BoxCollider>().enabled = false;
-            gameObject.GetComponent<MeshRenderer>().enabled = false;
-            StartCoroutine("CauseStartAgain");
+            if (itemManager.PickUpItem(HoldGrapple, null, grappleSprite))
+            {
+                itemManager.useItem += HoldGrapple;
+                playerWithItem = other.gameObject;
+
+                // Make it so no one else can pick up the item, don't wont to SetActive(false) because then the script stops working
+                gameObject.GetComponent<BoxCollider>().enabled = false;
+                gameObject.GetComponent<MeshRenderer>().enabled = false;
+                StartCoroutine("CauseStartAgain");
+            }
         }
     }
 

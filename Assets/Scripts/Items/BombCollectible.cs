@@ -19,6 +19,8 @@ public class BombCollectible : MonoBehaviour
     public GameObject bombPrefab;
     [Tooltip("WaitTime")]
     public float waitBeforeRespawn = 3f;
+    [Tooltip("Bomb item sprite")]
+    public Sprite bombSprite;
 
     private PlayerItemManager itemManager;
     private GameObject playerWithItem;
@@ -38,6 +40,7 @@ public class BombCollectible : MonoBehaviour
     {
         Debug.Log("Bomb used");
         itemManager.useItem -= PlaceBomb;
+        itemManager.throwItem -= ThrowBomb;
         StartCoroutine(PlacedBombExplosion());
     }
 
@@ -45,6 +48,7 @@ public class BombCollectible : MonoBehaviour
     {
         Debug.Log("Bomb thrown");
         itemManager.throwItem -= ThrowBomb;
+        itemManager.useItem -= PlaceBomb;
         StartCoroutine(ThrownBombExplosion());
     }
 
@@ -53,14 +57,18 @@ public class BombCollectible : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
-            itemManager.useItem += PlaceBomb;
-            itemManager.throwItem += ThrowBomb;
-            playerWithItem = other.gameObject;
 
-            // Make it so no one else can pick up the item, don't wont to SetActive(false) because then the script stops working
-            gameObject.GetComponent<BoxCollider>().enabled = false;
-            gameObject.GetComponent<MeshRenderer>().enabled = false;
-            StartCoroutine("CauseStartAgain");
+            //itemManager.useItem += PlaceBomb;
+            //itemManager.throwItem += ThrowBomb;
+            if (itemManager.PickUpItem(PlaceBomb, ThrowBomb, bombSprite))
+            {
+                playerWithItem = other.gameObject;
+
+                // Make it so no one else can pick up the item, don't wont to SetActive(false) because then the script stops working
+                gameObject.GetComponent<BoxCollider>().enabled = false;
+                gameObject.GetComponent<MeshRenderer>().enabled = false;
+                StartCoroutine("CauseStartAgain");
+            }
         }
     }
 
