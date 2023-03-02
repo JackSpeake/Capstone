@@ -24,12 +24,14 @@ public class Grapple : MonoBehaviour
 
         RaycastHit hit;
         Transform objectHit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Camera cam = transform.parent.GetComponentInChildren<Camera>();
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
 
         if (Physics.Raycast(ray, out hit))
         {
-            if (hit.transform.tag == "WALL")
+            if (hit.transform.CompareTag("WALL") )
             {
                 objectHit = hit.transform;
                 Debug.Log("Cast hit: " + hit.transform.position);
@@ -72,8 +74,8 @@ public class Grapple : MonoBehaviour
             }    
         }
 
-        
 
+        Destroy(this.gameObject);
         yield return new WaitForEndOfFrame();
 
     }

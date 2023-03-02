@@ -46,6 +46,7 @@ public class GrappleCollectable : MonoBehaviour
     {
         Debug.Log("Grapple Shot");
         GameObject grapple = GameObject.Instantiate(grapplePrefab, playerWithItem.transform.position, Quaternion.identity);
+        grapple.transform.parent = playerWithItem.transform;
         grapple.GetComponent<Grapple>().StartShootRoutine(playerWithItem);
 
 

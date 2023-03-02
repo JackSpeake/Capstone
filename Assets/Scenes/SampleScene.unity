@@ -436,6 +436,26 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &9342251 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1356842853502109274, guid: 5154271cc58782648a45190479eab7ff, type: 3}
+  m_PrefabInstance: {fileID: 895303718757293320}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9342257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9342251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb231c16195112f4e82b5a1235ddf49d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverRotate: 1
+  hoverHeight: 0.1
+  hoverSpeed: 1
 --- !u!1 &89795369
 GameObject:
   m_ObjectHideFlags: 0
@@ -14358,6 +14378,7 @@ GameObject:
   - component: {fileID: 1235751664}
   - component: {fileID: 1235751663}
   - component: {fileID: 1235751662}
+  - component: {fileID: 1235751667}
   m_Layer: 0
   m_Name: BombCollectible
   m_TagString: Untagged
@@ -14459,6 +14480,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1235751667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235751661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb231c16195112f4e82b5a1235ddf49d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverRotate: 1
+  hoverHeight: 0.1
+  hoverSpeed: 1
 --- !u!1 &1243597299
 GameObject:
   m_ObjectHideFlags: 0
@@ -29967,7 +30003,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-6640
+  m_Name: pb_Mesh18444
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -31852,7 +31888,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1966906940201364926, guid: 5154271cc58782648a45190479eab7ff, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.611
+      value: -4.69
       objectReference: {fileID: 0}
     - target: {fileID: 1966906940201364926, guid: 5154271cc58782648a45190479eab7ff, type: 3}
       propertyPath: m_LocalPosition.y

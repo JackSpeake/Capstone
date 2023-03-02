@@ -20,11 +20,16 @@ public class LocalCameraHandler : MonoBehaviour
         networkCharacterControllerPrototype = GetComponentInParent<NetworkCharacterControllerPrototype>();
     }
 
+    public Camera getLocalCamera()
+    {
+        return localCamera;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        if (localCamera.enabled)
-            localCamera.transform.parent = null;
+        //if (localCamera.enabled)
+        //    localCamera.transform.parent = null;
     }
 
     // Update is called once per frame
