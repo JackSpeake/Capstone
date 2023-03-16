@@ -302,12 +302,17 @@ MonoBehaviour:
   _interpolationDataSource: 0
   basevel: 1
   speedReductionRate: 20
-  wallJumpEjectMultiplier: 5
   dashSpeed: 1.5
   slideslow: 10
   wallSlideGravity: 0
   regularGraviity: 0
   wallJumpTime: 0.02
+  wallJumpLowThreshold: 0.25
+  wallJumpLowBoostMultiplier: 1.1
+  wallJumpMediumThreshold: 0.4
+  wallJumpMediumBoostMultiplier: 1.25
+  wallJumpBigThreshold: 0.6
+  wallJumpBigBoostMultiplier: 1.4
 --- !u!114 &6367010903159829220
 MonoBehaviour:
   m_ObjectHideFlags: 0

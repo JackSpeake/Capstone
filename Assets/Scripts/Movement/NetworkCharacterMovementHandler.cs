@@ -29,8 +29,6 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     [SerializeField] float speedReductionRate = 1.0f;
     Vector3 lockedWallVelocity;
     Vector3 lockedWallDirection;
-    [Tooltip("The multiplier for speed gains when jumping off the wall")]
-    [SerializeField] float wallJumpEjectMultiplier = 1.25f;
     Vector3 moveDirection;
     [Tooltip("The amount of speed gained upon dashing")]
     [SerializeField] float dashSpeed = 1.5f;
@@ -41,9 +39,23 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     [Tooltip("Set to gravity value of character controller by default")]
     [SerializeField] private float regularGraviity; 
     [Tooltip("Time that the player is jumping away from the wall for")]
-    [SerializeField] private float wallJumpTime = 0.2f; 
+    [SerializeField] private float wallJumpTime = 0.2f;
+    [Header("Wall Jump Thresholds")]
+    [Tooltip("Number of seconds wallsliding to reach the first threshold")]
+    [SerializeField] private float wallJumpLowThreshold = 0.5f;
+    [Tooltip("Velocity Multiplier when jumping off the wall for the first threshold")]
+    [SerializeField] private float wallJumpLowBoostMultiplier = 1.1f;
+    [Tooltip("Number of seconds wallsliding to reach the second threshold")]
+    [SerializeField] private float wallJumpMediumThreshold = 1.0f;
+    [Tooltip("Velocity Multiplier when jumping off the wall for the second threshold")]
+    [SerializeField] private float wallJumpMediumBoostMultiplier = 1.25f;
+    [Tooltip("Number of seconds wallsliding to reach the third (last) threshold")]
+    [SerializeField] private float wallJumpBigThreshold = 1.5f;
+    [Tooltip("Velocity Multiplier when jumping off the wall for the third (last) threshold")]
+    [SerializeField] private float wallJumpBigBoostMultiplier = 1.4f;
     private Vector3 wallJumpDirection;
     private float wallJumpTimer; // Keeps track of how long it's been since the player jumped off the wall
+    private float wallSlideTimer = 0.0f; //Keeps track of how long a player has been wall sliding for
 
     private void Awake()
     {
@@ -86,12 +98,14 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     }
                     break;
                 case PlayerState.WallSliding:
+                    wallSlideTimer += Time.fixedDeltaTime;
+                    Debug.Log(wallSlideTimer);
                     moveDirection = lockedWallDirection;
                     // Keep the x and z velocities the same but allow the y velocity to change (gravity eneds to work lol)
                     lockedWallVelocity.y = networkCharacterControllerPrototype.Velocity.y;
                     networkCharacterControllerPrototype.Velocity = lockedWallVelocity;
-                    Debug.Log($"Move Direction while wall sliding: {moveDirection}");
-                    Debug.Log($"Velocity while wall sliding: {networkCharacterControllerPrototype.Velocity}");
+                    //Debug.Log($"Move Direction while wall sliding: {moveDirection}");
+                    //Debug.Log($"Velocity while wall sliding: {networkCharacterControllerPrototype.Velocity}");
                     if (networkCharacterControllerPrototype.Velocity.y < 0) //Gravity only changed when falling so the player doesn't jump higher than intended
                     {
                         networkCharacterControllerPrototype.gravity = wallSlideGravity;
@@ -107,6 +121,28 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                         //networkCharacterControllerPrototype.Jump(ignoreGrounded: true);
                         if (networkCharacterControllerPrototype.VelMult == 0)
                             networkCharacterControllerPrototype.VelMult = 1;
+                        float wallJumpEjectMultiplier;
+                        if (wallSlideTimer >= wallJumpBigThreshold)
+                        {
+                            Debug.Log("Big Boost");
+                            wallJumpEjectMultiplier = wallJumpBigBoostMultiplier;
+
+                        }
+                        else if (wallSlideTimer >= wallJumpMediumThreshold)
+                        {
+                            Debug.Log("Medium Boost");
+                            wallJumpEjectMultiplier = wallJumpMediumBoostMultiplier;
+                        }
+                        else if (wallSlideTimer >= wallJumpLowThreshold)
+                        {
+                            Debug.Log("Low Boost");
+                            wallJumpEjectMultiplier = wallJumpLowBoostMultiplier;
+                        }
+                        else
+                        {
+                            Debug.Log("No Boost");
+                            wallJumpEjectMultiplier = 1.0f;
+                        }
                         networkCharacterControllerPrototype.VelMult *= wallJumpEjectMultiplier;
                         networkCharacterControllerPrototype.ShiftDirection(wallJumpDirection);
                         //moveDirection = hitWallNormal * wallJumpEjectMultiplier;
@@ -117,7 +153,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     {
                         moveDirection = wallJumpDirection;
                         //moveDirection = hitWallNormal * wallJumpEjectMultiplier;
-                        wallJumpTimer -= Time.deltaTime;
+                        wallJumpTimer -= Time.fixedDeltaTime;
                     }
                     else
                     {
@@ -216,6 +252,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             dashed = false;
             lockedWallVelocity = networkCharacterControllerPrototype.Velocity;
             lockedWallDirection = Vector3.Project(moveDirection, hit.gameObject.transform.right);
+            wallSlideTimer = 0.0f;
         }
         
     }
