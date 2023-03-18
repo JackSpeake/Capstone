@@ -116,6 +116,7 @@ Transform:
   - {fileID: 3035066814601934126}
   - {fileID: 1323967183541335236}
   - {fileID: 2616451957714606283}
+  - {fileID: 2460328540610466505}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -307,12 +308,16 @@ MonoBehaviour:
   wallSlideGravity: 0
   regularGraviity: 0
   wallJumpTime: 0.02
+  wallSlideNoBoostColor: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 1}
   wallJumpLowThreshold: 0.25
   wallJumpLowBoostMultiplier: 1.1
+  wallJumpLowBoostColor: {r: 0, g: 0.64669466, b: 1, a: 1}
   wallJumpMediumThreshold: 0.4
   wallJumpMediumBoostMultiplier: 1.25
+  wallJumpMediumBoostColor: {r: 1, g: 0.47788602, b: 0, a: 1}
   wallJumpBigThreshold: 0.6
   wallJumpBigBoostMultiplier: 1.4
+  wallJumpBigBoostColor: {r: 0.57253647, g: 0, b: 1, a: 1}
 --- !u!114 &6367010903159829220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,6 +356,7 @@ GameObject:
   - component: {fileID: 1501795057925943682}
   - component: {fileID: 1501795057925943683}
   - component: {fileID: 4784296692138618515}
+  - component: {fileID: 3990208548682981716}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -436,6 +442,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraAnchor: {fileID: 1323967183541335236}
+--- !u!114 &3990208548682981716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501795057925943680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 748896f7109400540ba4a325d2e42119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  postProcessingEffectsMaterial: {fileID: 2100000, guid: 7800e02d7aa6ee046b52812526d2c5e9, type: 2}
+  radius: 0.95
+  feathering: 0.8
 --- !u!1 &3372694387094464956
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,6 +562,54 @@ Transform:
   m_Father: {fileID: 1501795056821901376}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4077499318077518800
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2460328540610466505}
+  - component: {fileID: 7403781363624435618}
+  m_Layer: 7
+  m_Name: WallSlideBoostVignette
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2460328540610466505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4077499318077518800}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1501795056821901376}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7403781363624435618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4077499318077518800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedProfile: {fileID: 11400000, guid: 6f118fe4ba5747f4f9bba98f35f25e47, type: 2}
+  isGlobal: 0
+  blendDistance: 0
+  weight: 1
+  priority: 0
 --- !u!1 &4781075488681000280
 GameObject:
   m_ObjectHideFlags: 0
