@@ -25,12 +25,14 @@ public class PlayerItemManager : NetworkBehaviour
         {
             if (networkInputData.selfItemPressed)
             {
+                Debug.Log("Using item");
                 itemImage.sprite = null;
                 useItem?.Invoke();
             }
 
             if (networkInputData.throwItemPressed)
             {
+                Debug.Log("Throwing Item");
                 itemImage.sprite = null;
                 throwItem?.Invoke();
             }

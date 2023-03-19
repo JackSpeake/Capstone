@@ -52,12 +52,12 @@ public class CharacterInputHandler : MonoBehaviour
             shift = true;
         }
 
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             ePressed = true;
         }
 
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             qPressed = true;
         }
