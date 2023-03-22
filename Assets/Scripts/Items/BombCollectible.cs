@@ -42,7 +42,7 @@ public class BombCollectible : MonoBehaviour
         Debug.Log("Bomb used");
         itemManager.useItem -= PlaceBomb;
         itemManager.throwItem -= ThrowBomb;
-        StartCoroutine(PlacedBombExplosion());
+        PlacedBombExplosion();
     }
 
     private void ThrowBomb()
@@ -87,7 +87,7 @@ public class BombCollectible : MonoBehaviour
     }
 
 
-    private IEnumerator PlacedBombExplosion()
+    private void PlacedBombExplosion()
     {
         Debug.Log("Bomb Placed");
         Vector3 initialPosition = new Vector3(playerWithItem.transform.position.x, 0f, playerWithItem.transform.position.z);
@@ -98,31 +98,9 @@ public class BombCollectible : MonoBehaviour
         itemManager.useItem += ExplodeCreatedBomb;
         itemManager.throwItem += ExplodeCreatedBomb;
 
-        yield return new WaitForSeconds(placedSecondsBeforeExplosion);
-        //bomb.GetComponent<Bomb>().ExplodeBomb(placedExposionRadius);
         // after the item has been used, get rid of the collectible
         //gameObject.SetActive(false);
     }
-
-    /*
-    private IEnumerator ThrownBombExplosion()
-    {
-        Debug.Log("Bomb Thrown");
-        Vector3 initialPosition = Camera.main.transform.position;
-        Vector3 throwDirection = Camera.main.transform.forward;
-        Debug.Log(throwDirection);
-        GameObject bomb = GameObject.Instantiate(bombPrefab, initialPosition, Quaternion.identity);
-        createdBombScript = bomb.GetComponent<Bomb>();
-        bomb.GetComponent<Rigidbody>().AddForce(throwDirection * throwForce, ForceMode.Impulse);
-        createdBombScript.SetExplosionRadius(thrownExplosionRadius);
-        createdBombScript.CreateExplosionRadiusIndicator();
-
-        yield return new WaitForSeconds(thrownSecondsBeforeExplosion);
-        //bomb.GetComponent<Bomb>().ExplodeBomb(placedExposionRadius);
-        // after the item has been used, get rid of the collectible
-        //gameObject.SetActive(false);
-    }
-    */
 
     private void ThrownBombExplosion()
     {

@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrappleCollectable : MonoBehaviour
+public class SpearCollectible : MonoBehaviour
 {
-    [Tooltip("Grapple prefab")]
-    public GameObject grapplePrefab;
+    [Tooltip("Spear prefab")]
+    public GameObject spearPrefab;
     [Tooltip("WaitTime")]
     public float waitBeforeRespawn = 3f;
     [Tooltip("Grapple sprite")]
-    public Sprite grappleSprite;
+    public Sprite spearSprite;
+    [Tooltip("Force to throw spear")]
+    public float throwForce = 5f;
 
     private PlayerItemManager itemManager;
     private GameObject playerWithItem;
@@ -25,11 +27,20 @@ public class GrappleCollectable : MonoBehaviour
 
     }
 
-    private void HoldGrapple()
+    private void UseSpear()
     {
-        Debug.Log("Grapple used");
-        itemManager.useItem -= HoldGrapple;
+        Debug.Log("Spear used");
+        itemManager.useItem -= UseSpear;
+        itemManager.throwItem -= ThrowSpear;
         GrappleShot();
+    }
+
+    private void ThrowSpear()
+    {
+        Debug.Log("Spear Thrown");
+        itemManager.useItem -= UseSpear;
+        itemManager.throwItem -= ThrowSpear;
+        ThrowSpearFromPlayer();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -38,7 +49,7 @@ public class GrappleCollectable : MonoBehaviour
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
 
-            if (itemManager.PickUpItem(HoldGrapple, null, grappleSprite))
+            if (itemManager.PickUpItem(UseSpear, ThrowSpear, spearSprite))
             {
                 playerWithItem = other.gameObject;
 
@@ -65,12 +76,18 @@ public class GrappleCollectable : MonoBehaviour
     private void GrappleShot()
     {
         Debug.Log("Grapple Shot");
-        GameObject grapple = GameObject.Instantiate(grapplePrefab, playerWithItem.transform.position, Quaternion.identity);
+        GameObject grapple = GameObject.Instantiate(spearPrefab, playerWithItem.transform.position, Quaternion.identity);
         grapple.transform.parent = playerWithItem.transform;
         grapple.GetComponent<Grapple>().StartShootRoutine(playerWithItem);
+    }
 
-
-        // after the item has been used, get rid of the collectible
-        // gameObject.SetActive(false);
+    private void ThrowSpearFromPlayer()
+    {
+        Vector3 initialPosition = Camera.main.transform.position;
+        Vector3 throwDirection = Camera.main.transform.forward;
+        initialPosition += throwDirection;
+        Debug.Log(throwDirection);
+        GameObject spear = GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.identity);
+        spear.GetComponent<Rigidbody>().AddForce(throwDirection * throwForce, ForceMode.Impulse);
     }
 }
