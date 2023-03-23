@@ -37,7 +37,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             }
             else if (o.GetComponent<GrappleCollectable>() != null)
             {
-                o.GetComponent<BombCollectible>().Respawn();
+                o.GetComponent<GrappleCollectable>().Respawn();
+            }
+            else if (o.GetComponent<SpearCollectible>() != null)
+            {
+                o.GetComponent<SpearCollectible>().Respawn();
             }
         }
     }
@@ -99,7 +103,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     void INetworkRunnerCallbacks.OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        Debug.Log("Method Call: OnSessionListUpdated");
+        FindObjectOfType<NetworkRunnerHandler>().sessions = sessionList;
     }
 
     void INetworkRunnerCallbacks.OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
