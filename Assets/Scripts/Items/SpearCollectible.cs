@@ -84,10 +84,10 @@ public class SpearCollectible : MonoBehaviour
     private void ThrowSpearFromPlayer()
     {
         Vector3 initialPosition = Camera.main.transform.position;
-        Vector3 throwDirection = Camera.main.transform.forward;
+        Vector3 throwDirection = (Camera.main.transform.forward + Vector3.up) * 2;
         initialPosition += throwDirection;
         Debug.Log(throwDirection);
-        GameObject spear = GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.identity);
-        spear.GetComponent<Rigidbody>().AddForce(throwDirection * throwForce, ForceMode.Impulse);
+        GameObject spear = GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.LookRotation(throwDirection));
+        spear.GetComponentInChildren<Rigidbody>().AddForce(throwDirection * throwForce, ForceMode.Impulse);
     }
 }

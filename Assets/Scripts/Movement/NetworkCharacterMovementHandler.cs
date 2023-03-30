@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Fusion;
 using System;
 using Photon;
@@ -63,6 +64,9 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     [SerializeField] private float wallJumpBigBoostMultiplier = 1.4f;
     [Tooltip("Vignette color for the third (last) threshold (think Mario Kart drift colors)")]
     [SerializeField] private Color wallJumpBigBoostColor;
+    [Tooltip("The crosshair image attached to the player")]
+    [SerializeField] private Image crosshair;
+    private Color initialCrosshairColor;
     private Vector3 wallJumpDirection;
     private float wallJumpTimer; // Keeps track of how long it's been since the player jumped off the wall
     private float wallSlideTimer = 0.0f; //Keeps track of how long a player has been wall sliding for
@@ -75,6 +79,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
         localCamera = GetComponentInChildren<Camera>();
         regularGraviity = networkCharacterControllerPrototype.gravity;
         wallSlideGravity = networkCharacterControllerPrototype.gravity / slideslow;
+        initialCrosshairColor = crosshair.color;
     }
 
     public override void FixedUpdateNetwork()
@@ -90,6 +95,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                 dashed = false;
                 state = PlayerState.Running;
                 postProcessingEffectsController.SetVignetteActive(0.0f);
+                crosshair.color = initialCrosshairColor;
                 networkCharacterControllerPrototype.gravity = regularGraviity;
             }
             switch (state)
@@ -123,6 +129,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                         Debug.Log("Big Boost");
                         wallJumpEjectMultiplier = wallJumpBigBoostMultiplier;
                         postProcessingEffectsController.SetColor(wallJumpBigBoostColor);
+                        crosshair.color = wallJumpBigBoostColor;
 
                     }
                     else if (wallSlideTimer >= wallJumpMediumThreshold)
@@ -130,18 +137,21 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                         Debug.Log("Medium Boost");
                         wallJumpEjectMultiplier = wallJumpMediumBoostMultiplier;
                         postProcessingEffectsController.SetColor(wallJumpMediumBoostColor);
+                        crosshair.color = wallJumpMediumBoostColor;
                     }
                     else if (wallSlideTimer >= wallJumpLowThreshold)
                     {
                         Debug.Log("Low Boost");
                         wallJumpEjectMultiplier = wallJumpLowBoostMultiplier;
                         postProcessingEffectsController.SetColor(wallJumpLowBoostColor);
+                        crosshair.color = wallJumpLowBoostColor;
                     }
                     else
                     {
                         Debug.Log("No Boost");
                         wallJumpEjectMultiplier = 1.0f;
                         postProcessingEffectsController.SetColor(wallSlideNoBoostColor);
+                        crosshair.color = wallSlideNoBoostColor;
                     }
                     //Debug.Log($"Move Direction while wall sliding: {moveDirection}");
                     //Debug.Log($"Velocity while wall sliding: {networkCharacterControllerPrototype.Velocity}");
@@ -154,6 +164,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     {
                         // wallSliding = false;
                         postProcessingEffectsController.SetVignetteActive(0.0f);
+                        crosshair.color = initialCrosshairColor;
                         state = PlayerState.WallJumping;
                         networkCharacterControllerPrototype.gravity = regularGraviity;
                         wallJumpTimer = wallJumpTime;
