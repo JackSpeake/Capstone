@@ -31,6 +31,7 @@ public class NetworkRunnerHandler : MonoBehaviour
 
             Debug.Log($"Server NetworkRunner Started.");
         }
+
     }
 
 
@@ -53,30 +54,38 @@ public class NetworkRunnerHandler : MonoBehaviour
             Scene = scene,
             SessionName = sessionName,
             Initialized = initialized,
-            //CustomLobbyName = "OurLobbyID",
+            CustomLobbyName = "OurLobbyID",
             SceneManager = sceneManager
             
         });
     }
 
-    public void OnJoinLobby()
+    public IEnumerator OnJoinLobby()
     {
-        //var clientTask = JoinLobby();
         bool found = false;
+        int count = 0;
+        while (sessions == null && count < 5)
+        {
+            yield return new WaitForSeconds(1f);
+            count++;
+        }
 
         if (sessions != null)
         {
+            Debug.Log("TEST");
             foreach (SessionInfo s in sessions)
             {
                 if (!found && s.PlayerCount < 2)
                 {
                     JoinGame(s);
+                    Debug.Log("FUDCKSJDAKJDSA");
                     found = true;
                 }
             }
         }
         else
         {
+            Debug.Log("DEAD");
             found = true;
             CreateGame("Room0", "SampleScene");
         }
@@ -88,12 +97,17 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     }
 
-    private async Task JoinLobby()
+
+    public async void StartGame()
+    {
+        await JoinLobby();
+    }
+
+    public async Task JoinLobby()
     {
         string lobbyID = "OurLobbyID";
 
         var result = await networkRunner.JoinSessionLobby(SessionLobby.Custom, lobbyID);
-
         if (!result.Ok)
         {
             Debug.LogError("Unable to join lobby");
@@ -101,6 +115,7 @@ public class NetworkRunnerHandler : MonoBehaviour
         else
         {
             Debug.Log("Lobby Joined");
+            StartCoroutine("OnJoinLobby");
         }
     }
 
