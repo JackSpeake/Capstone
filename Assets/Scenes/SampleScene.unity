@@ -28747,7 +28747,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7631928565215136630, guid: cb47e5bddf642a1458408286a154cdaf, type: 3}
       propertyPath: m_TagString
-      value: WALL
+      value: GROUND
       objectReference: {fileID: 0}
     - target: {fileID: 7631928565262171904, guid: cb47e5bddf642a1458408286a154cdaf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -38759,7 +38759,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-16318
+  m_Name: pb_Mesh-26608
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
