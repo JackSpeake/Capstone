@@ -259,7 +259,8 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
 
     public void AddForce(Vector3 direction, float force)
     {
-        networkCharacterControllerPrototype.AddForce(direction, force);
+        networkCharacterControllerPrototype.VelMult *= force;
+        networkCharacterControllerPrototype.ShiftDirection(direction);
     }
 
     private void RotateCharacter()
