@@ -489,6 +489,7 @@ GameObject:
   - component: {fileID: 7151539099117079767}
   - component: {fileID: 2600624820813443801}
   - component: {fileID: 165587507459896707}
+  - component: {fileID: -8762027581979525823}
   m_Layer: 0
   m_Name: LilRobot
   m_TagString: Untagged
@@ -556,6 +557,18 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &-8762027581979525823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7010603943103720382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3710bc1e9a4ebd24b9ea9bd3f4bc8e9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7362037165064857210
 GameObject:
   m_ObjectHideFlags: 0
