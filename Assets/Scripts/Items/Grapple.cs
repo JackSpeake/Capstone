@@ -25,6 +25,8 @@ public class Grapple : MonoBehaviour
         RaycastHit hit;
         Transform objectHit;
 
+        float sinceStart = Time.time;
+
         Camera cam = transform.parent.GetComponentInChildren<Camera>();
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
@@ -41,6 +43,9 @@ public class Grapple : MonoBehaviour
                 {
                     // TODO: Make player item manager know if/when the grapple starts or ends
                     // this would allow the player to have an early exit.
+
+                    if (Time.time - sinceStart > .5f && Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E))
+                        break;
 
                     Vector3 dir = objectHit.position - player.transform.position;
                     dir = dir.normalized;
@@ -59,6 +64,9 @@ public class Grapple : MonoBehaviour
                 {
                     // TODO: Make player item manager know if/when the grapple starts or ends
                     // this would allow the player to have an early exit.
+
+                    if (Time.time - sinceStart > .5f && Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E))
+                        break;
 
                     Vector3 dir = objectHit.position - player.transform.position;
                     dir = dir.normalized;
