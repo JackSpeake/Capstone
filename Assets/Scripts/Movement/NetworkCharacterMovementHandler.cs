@@ -20,7 +20,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
 {
     PlayerState state = PlayerState.Running;
     NetworkCharacterControllerPrototype networkCharacterControllerPrototype;
-    Camera localCamera;
+    [SerializeField] Camera localCamera;
     bool wallSliding = false;
     bool dashed = false;
     NetworkInputData networkInputData;
@@ -115,7 +115,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     {
                         dashed = true;
                         networkCharacterControllerPrototype.VelMult *= dashSpeed;
-                        networkCharacterControllerPrototype.ShiftDirection(Camera.main.transform.forward);
+                        networkCharacterControllerPrototype.ShiftDirection(localCamera.transform.forward); //
                     }
                     break;
                 case PlayerState.WallSliding:
@@ -171,7 +171,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                         state = PlayerState.WallJumping;
                         networkCharacterControllerPrototype.gravity = regularGraviity;
                         wallJumpTimer = wallJumpTime;
-                        wallJumpDirection = Camera.main.transform.forward;
+                        wallJumpDirection = localCamera.transform.forward;
                         //networkCharacterControllerPrototype.Jump(ignoreGrounded: true);
                         if (networkCharacterControllerPrototype.VelMult == 0)
                             networkCharacterControllerPrototype.VelMult = 1;
@@ -272,7 +272,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
         transform.forward = networkInputData.aimForwardVector;
 
         Quaternion rot = transform.rotation;
-        rot.eulerAngles = new Vector3(0, rot.eulerAngles.y, rot.eulerAngles.z);
+        rot.eulerAngles = new Vector3(rot.eulerAngles.x, rot.eulerAngles.y, rot.eulerAngles.z);
         transform.rotation = rot;
     }
 
