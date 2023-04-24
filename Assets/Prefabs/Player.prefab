@@ -494,6 +494,7 @@ MonoBehaviour:
   wallJumpBigBoostMultiplier: 1.4
   wallJumpBigBoostColor: {r: 0.57253647, g: 0, b: 1, a: 1}
   crosshair: {fileID: 8807213268989679308}
+  speedometer: {fileID: 6128664950780912260}
 --- !u!114 &6367010903159829220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -707,7 +708,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -119.501686, y: -49.4998}
+  m_AnchoredPosition: {x: -119.50168, y: -49.4998}
   m_SizeDelta: {x: 95, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6128664950780912260
@@ -975,7 +976,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -142.6, y: -38.8}
+  m_AnchoredPosition: {x: -142.6, y: -38.800003}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &9102229670508887431

@@ -66,6 +66,8 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     [SerializeField] private Color wallJumpBigBoostColor;
     [Tooltip("The crosshair image attached to the player")]
     [SerializeField] private Image crosshair;
+    [Tooltip("The speedometer attached to the player")]
+    [SerializeField] private Slider speedometer;
     private Color initialCrosshairColor;
     private Vector3 wallJumpDirection;
     private float wallJumpTimer; // Keeps track of how long it's been since the player jumped off the wall
@@ -90,6 +92,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             // calculate move direction
             moveDirection = transform.forward * networkInputData.movementInput.y + transform.right * networkInputData.movementInput.x;
             moveDirection.Normalize();
+            speedometer.value = networkCharacterControllerPrototype.Velocity.magnitude * 2f;
             if (networkCharacterControllerPrototype.IsGrounded)
             {
                 dashed = false;
