@@ -23,6 +23,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     [SerializeField] Camera localCamera;
     bool wallSliding = false;
     bool dashed = false;
+    NetworkObject networkObject;
     NetworkInputData networkInputData;
     [Tooltip("The starting val for multiplying speed")]
     [SerializeField] float basevel = 1.0f;
@@ -73,6 +74,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     private float wallJumpTimer; // Keeps track of how long it's been since the player jumped off the wall
     private float wallSlideTimer = 0.0f; //Keeps track of how long a player has been wall sliding for
     private PostProcessingEffectsController postProcessingEffectsController;
+    [SerializeField] private Vector3 TrueVal;
 
     private void Awake()
     {
@@ -82,6 +84,11 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
         regularGraviity = networkCharacterControllerPrototype.gravity;
         wallSlideGravity = networkCharacterControllerPrototype.gravity / slideslow;
         initialCrosshairColor = crosshair.color;
+    }
+
+    private void Start()
+    {
+        networkObject = this.GetComponent<NetworkObject>();
     }
 
     public override void FixedUpdateNetwork()
@@ -115,7 +122,12 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     {
                         dashed = true;
                         networkCharacterControllerPrototype.VelMult *= dashSpeed;
-                        networkCharacterControllerPrototype.ShiftDirection(localCamera.transform.forward); //
+                        
+                        networkCharacterControllerPrototype.ShiftDirection(TrueVal);
+                        
+                       
+
+                        
                     }
                     break;
                 case PlayerState.WallSliding:
@@ -171,7 +183,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                         state = PlayerState.WallJumping;
                         networkCharacterControllerPrototype.gravity = regularGraviity;
                         wallJumpTimer = wallJumpTime;
-                        wallJumpDirection = localCamera.transform.forward;
+                        wallJumpDirection = TrueVal;
                         //networkCharacterControllerPrototype.Jump(ignoreGrounded: true);
                         if (networkCharacterControllerPrototype.VelMult == 0)
                             networkCharacterControllerPrototype.VelMult = 1;
@@ -273,6 +285,9 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
 
         Quaternion rot = transform.rotation;
         rot.eulerAngles = new Vector3(rot.eulerAngles.x, rot.eulerAngles.y, rot.eulerAngles.z);
+        transform.rotation = rot;
+        TrueVal = transform.forward;
+        rot.eulerAngles = new Vector3(0, rot.eulerAngles.y, rot.eulerAngles.z);
         transform.rotation = rot;
     }
 
