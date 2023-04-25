@@ -5818,6 +5818,7 @@ MonoBehaviour:
   waitBeforeRespawn: 3
   spearSprite: {fileID: 21300000, guid: 3164c4cb49cd3534d8737c894a660b09, type: 3}
   initialVelocity: 20
+  yLookDirection: -1
 --- !u!114 &339076050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38759,7 +38760,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-26608
+  m_Name: pb_Mesh34560
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -42867,7 +42868,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh36252
+  m_Name: pb_Mesh33222
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

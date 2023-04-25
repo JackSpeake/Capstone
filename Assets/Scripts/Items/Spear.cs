@@ -8,10 +8,14 @@ public class Spear : MonoBehaviour
     Rigidbody rb;
     Quaternion initialRotation;
     Vector3 rotateAxis;
+    CapsuleCollider capsuleCollider;
+    bool hitGround = false;
+    Vector3 stayGrounded;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
         initialRotation = transform.rotation;
 
         Vector3 initialForward = transform.forward;
@@ -23,18 +27,15 @@ public class Spear : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y <= GetComponent<MeshRenderer>().bounds.extents.y)
-        {
-            Vector3 stayGrounded = new Vector3(transform.position.x, Mathf.Max(transform.position.y, 0f), transform.position.z);
-            transform.position = stayGrounded;
-            rb.freezeRotation = true;
-            rb.useGravity = false;
-            rb.velocity = Vector3.zero;
-        }
-        else
+        if (!hitGround)
         {
             transform.rotation = Quaternion.LookRotation(rb.velocity) * initialRotation;
             transform.Rotate(rotateAxis, 90f);
+            Debug.Log("Rotated");
+        }
+        else
+        {
+            transform.position = stayGrounded;
         }
     }
 
@@ -42,8 +43,12 @@ public class Spear : MonoBehaviour
     {
         if (other.gameObject.CompareTag("GROUND"))
         {
+            stayGrounded = new Vector3(transform.position.x, Mathf.Max(transform.position.y, GetComponent<MeshRenderer>().bounds.extents.y), transform.position.z);
             rb.velocity = Vector3.zero;
             rb.freezeRotation = true;
+            rb.useGravity = false;
+            capsuleCollider.isTrigger = false;
+            hitGround = true;
         }
     }
 }

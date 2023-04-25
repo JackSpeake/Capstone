@@ -12,6 +12,8 @@ public class SpearCollectible : MonoBehaviour
     public Sprite spearSprite;
     [Tooltip("Initial velocity of the thrown spear")]
     public float initialVelocity = 5f;
+    [Tooltip("Affects the angle for the spear to be used as a ramp. The more negative the number the lower the angle becomes (flatter ramp)")]
+    public float yLookDirection = -1f;
 
     private PlayerItemManager itemManager;
     private GameObject playerWithItem;
@@ -25,6 +27,14 @@ public class SpearCollectible : MonoBehaviour
     void Update()
     {
 
+    }
+
+    private void UseSpear()
+    {
+        Debug.Log("Spear used");
+        itemManager.useItem -= UseSpear;
+        itemManager.throwItem -= ThrowSpear;
+        PlaceSpearAsRamp();
     }
 
     private void ThrowSpear()
@@ -41,7 +51,7 @@ public class SpearCollectible : MonoBehaviour
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
 
-            if (itemManager.PickUpItem(ThrowSpear, ThrowSpear, spearSprite))
+            if (itemManager.PickUpItem(UseSpear, ThrowSpear, spearSprite))
             {
                 playerWithItem = other.gameObject;
 
@@ -65,13 +75,22 @@ public class SpearCollectible : MonoBehaviour
         gameObject.GetComponent<MeshRenderer>().enabled = true;
     }
 
+    private void PlaceSpearAsRamp()
+    {
+        Camera cam = playerWithItem.transform.GetComponentInChildren<Camera>();
+        Vector3 initialPosition = cam.transform.position;
+        Vector3 placeDirection = new Vector3(cam.transform.forward.x, 0.0f, cam.transform.forward.z);
+        initialPosition += placeDirection * 2;
+        Vector3 rotationDirection = new Vector3(placeDirection.x, yLookDirection, placeDirection.z);
+        GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.LookRotation(rotationDirection));
+    }
+
     private void ThrowSpearFromPlayer()
     {
         Camera cam = playerWithItem.transform.GetComponentInChildren<Camera>();
         Vector3 initialPosition = cam.transform.position;
         Vector3 throwDirection = cam.transform.forward;
         initialPosition += throwDirection * 2;
-        // float launchAngle = Mathf.Atan2(throwDirection.z, throwDirection.y);
 
         Vector3 absThrowDirection = new Vector3(Mathf.Abs(throwDirection.x), throwDirection.y, Mathf.Abs(throwDirection.z));
         float launchAngle;
