@@ -27,14 +27,6 @@ public class SpearCollectible : MonoBehaviour
 
     }
 
-    private void UseSpear()
-    {
-        Debug.Log("Spear used");
-        itemManager.useItem -= UseSpear;
-        itemManager.throwItem -= ThrowSpear;
-        GrappleShot();
-    }
-
     private void ThrowSpear()
     {
         Debug.Log("Spear Thrown");
@@ -49,7 +41,7 @@ public class SpearCollectible : MonoBehaviour
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
 
-            if (itemManager.PickUpItem(UseSpear, ThrowSpear, spearSprite))
+            if (itemManager.PickUpItem(ThrowSpear, ThrowSpear, spearSprite))
             {
                 playerWithItem = other.gameObject;
 
@@ -71,14 +63,6 @@ public class SpearCollectible : MonoBehaviour
     {
         gameObject.GetComponent<BoxCollider>().enabled = true;
         gameObject.GetComponent<MeshRenderer>().enabled = true;
-    }
-
-    private void GrappleShot()
-    {
-        Debug.Log("Grapple Shot");
-        GameObject grapple = GameObject.Instantiate(spearPrefab, playerWithItem.transform.position, Quaternion.identity);
-        grapple.transform.parent = playerWithItem.transform;
-        grapple.GetComponent<Grapple>().StartShootRoutine(playerWithItem);
     }
 
     private void ThrowSpearFromPlayer()
