@@ -10,8 +10,8 @@ public class SpearCollectible : MonoBehaviour
     public float waitBeforeRespawn = 3f;
     [Tooltip("Grapple sprite")]
     public Sprite spearSprite;
-    [Tooltip("Force to throw spear")]
-    public float throwForce = 5f;
+    [Tooltip("Initial velocity of the thrown spear")]
+    public float initialVelocity = 5f;
 
     private PlayerItemManager itemManager;
     private GameObject playerWithItem;
@@ -83,11 +83,31 @@ public class SpearCollectible : MonoBehaviour
 
     private void ThrowSpearFromPlayer()
     {
-        Vector3 initialPosition = Camera.main.transform.position;
-        Vector3 throwDirection = (Camera.main.transform.forward + Vector3.up) * 2;
-        initialPosition += throwDirection;
-        Debug.Log(throwDirection);
-        GameObject spear = GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.LookRotation(throwDirection));
-        spear.GetComponentInChildren<Rigidbody>().AddForce(throwDirection * throwForce, ForceMode.Impulse);
+        Camera cam = playerWithItem.transform.GetComponentInChildren<Camera>();
+        Vector3 initialPosition = cam.transform.position;
+        Vector3 throwDirection = cam.transform.forward;
+        initialPosition += throwDirection * 2;
+        // float launchAngle = Mathf.Atan2(throwDirection.z, throwDirection.y);
+
+        Vector3 absThrowDirection = new Vector3(Mathf.Abs(throwDirection.x), throwDirection.y, Mathf.Abs(throwDirection.z));
+        float launchAngle;
+        if (absThrowDirection.z > absThrowDirection.x)
+        {
+            launchAngle = Mathf.Atan2(absThrowDirection.z, absThrowDirection.y);
+        } 
+        else
+        {
+            launchAngle = Mathf.Atan2(absThrowDirection.x, absThrowDirection.y);
+        }
+
+
+        Debug.Log($"Spear throw direction: {throwDirection}");
+        Debug.Log($"Launch Angle in degrees: {launchAngle * Mathf.Rad2Deg}");
+
+        // GameObject spear = GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.LookRotation(throwDirection));
+        GameObject spear = GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.LookRotation(new Vector3(throwDirection.x, 0f, throwDirection.z)));
+        Spear spearScript = spear.GetComponent<Spear>();
+        spearScript.Launch(initialVelocity, launchAngle);
+        // spear.GetComponentInChildren<Rigidbody>().AddForce(throwDirection * initialVelocity, ForceMode.Impulse);
     }
 }
