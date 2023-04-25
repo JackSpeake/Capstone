@@ -5817,7 +5817,7 @@ MonoBehaviour:
   spearPrefab: {fileID: 7804312496893080070, guid: feadea3e09097ba49bd9c76123fa71a3, type: 3}
   waitBeforeRespawn: 3
   spearSprite: {fileID: 21300000, guid: 3164c4cb49cd3534d8737c894a660b09, type: 3}
-  throwForce: 5
+  initialVelocity: 20
 --- !u!114 &339076050
 MonoBehaviour:
   m_ObjectHideFlags: 0

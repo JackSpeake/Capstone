@@ -100,14 +100,7 @@ public class SpearCollectible : MonoBehaviour
             launchAngle = Mathf.Atan2(absThrowDirection.x, absThrowDirection.y);
         }
 
-
-        Debug.Log($"Spear throw direction: {throwDirection}");
-        Debug.Log($"Launch Angle in degrees: {launchAngle * Mathf.Rad2Deg}");
-
-        // GameObject spear = GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.LookRotation(throwDirection));
         GameObject spear = GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.LookRotation(new Vector3(throwDirection.x, 0f, throwDirection.z)));
-        Spear spearScript = spear.GetComponent<Spear>();
-        spearScript.Launch(initialVelocity, launchAngle);
-        // spear.GetComponentInChildren<Rigidbody>().AddForce(throwDirection * initialVelocity, ForceMode.Impulse);
+        spear.GetComponent<Rigidbody>().AddForce(throwDirection * initialVelocity, ForceMode.Impulse);
     }
 }
