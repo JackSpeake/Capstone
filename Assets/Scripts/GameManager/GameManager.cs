@@ -45,6 +45,7 @@ public class GameManager : NetworkBehaviour
     private static NetworkObject spawnBox;
     private static List<GameObject> players = new List<GameObject>();
     private int numPlayersFinished = 0;
+    [Networked] public bool gameFinished { get; set; }
 
     private void Awake()
     {
@@ -84,8 +85,11 @@ public class GameManager : NetworkBehaviour
             Tick elapsedTicks = Runner.Simulation.Tick - initialTick;
             onRaceTimerChanged.Invoke(elapsedTicks / 60f);
 
-            if (numPlayersFinished == playersNeeded)
+            //Debug.Log(numPlayersFinished);
+
+            if (numPlayersFinished == playersNeeded || gameFinished)
             {
+                gameFinished = true;
                 Debug.Log("The race is over");
                 gameInProgress = false;
                 onRaceEnded.Invoke();
