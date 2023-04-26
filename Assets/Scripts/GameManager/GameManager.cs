@@ -44,7 +44,8 @@ public class GameManager : NetworkBehaviour
     private static TickTimer countdownTimer;
     private static NetworkObject spawnBox;
     private static List<GameObject> players = new List<GameObject>();
-    private int numPlayersFinished = 0;
+    [Networked] private int numPlayersFinished { get; set; } = 0;
+    [Networked] private bool gameFinished { get; set; } = false;
 
     private void Awake()
     {
@@ -84,10 +85,11 @@ public class GameManager : NetworkBehaviour
             Tick elapsedTicks = Runner.Simulation.Tick - initialTick;
             onRaceTimerChanged.Invoke(elapsedTicks / 60f);
 
-            if (numPlayersFinished == playersNeeded)
+            if (numPlayersFinished == playersNeeded || gameFinished)
             {
                 Debug.Log("The race is over");
                 gameInProgress = false;
+                gameFinished = true;
                 onRaceEnded.Invoke();
             }
         }
