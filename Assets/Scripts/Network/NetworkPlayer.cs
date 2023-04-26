@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using UnityEngine.SceneManagement;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public static NetworkPlayer Local { get; set; }
 
     public Transform playerModel;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +50,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         if (player == Object.InputAuthority)
             Runner.Despawn(Object);
+    }
+
+    public void Disconnect()
+    {
+        SceneManager.LoadScene(1);
+        //Runner.Disconnect(Local.GetComponent<NetworkObject>().InputAuthority);
     }
 
 }

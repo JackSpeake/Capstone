@@ -12,6 +12,8 @@ public class CharacterInputHandler : MonoBehaviour
     bool ePressed = false;
     bool qPressed = false;
 
+    PauseMenu pm;
+
     LocalCameraHandler localCameraHandler;
     private void Awake()
     {
@@ -23,47 +25,54 @@ public class CharacterInputHandler : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        pm = GetComponentInChildren<PauseMenu>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // view input
-
-        viewInputVector.x = Input.GetAxis("Mouse X");
-        viewInputVector.y = Input.GetAxis("Mouse Y") * -1;
-
-        // move input
-        moveInputVector.x = Input.GetAxis("Horizontal");
-        moveInputVector.y = Input.GetAxis("Vertical");
-
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetKeyDown(KeyCode.Escape))
+            pm.TogglePause();
+        if (!pm.paused)
         {
-            jump = true;
+
+            // view input
+
+            viewInputVector.x = Input.GetAxis("Mouse X");
+            viewInputVector.y = Input.GetAxis("Mouse Y") * -1;
+
+            // move input
+            moveInputVector.x = Input.GetAxis("Horizontal");
+            moveInputVector.y = Input.GetAxis("Vertical");
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                jump = true;
+            }
+
+            if (Input.GetButton("Jump"))
+            {
+                jumpHeld = true; // Separate check to see if player is holding down space to maintain a wall slide
+            }
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                shift = true;
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                ePressed = true;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                qPressed = true;
+            }
+
+
+            localCameraHandler.SetViewInputVector(viewInputVector);
         }
-
-        if (Input.GetButton("Jump"))
-        {
-            jumpHeld = true; // Separate check to see if player is holding down space to maintain a wall slide
-        }
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            shift = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            ePressed = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            qPressed = true;
-        }
-
-
-        localCameraHandler.SetViewInputVector(viewInputVector);
     }
 
     public NetworkInputData GetNetworkInput()

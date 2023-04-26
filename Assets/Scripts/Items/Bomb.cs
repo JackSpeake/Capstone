@@ -65,7 +65,10 @@ public class Bomb : MonoBehaviour
             }
         }
 
-        gameObject.SetActive(false);
+        if (NetworkPlayer.Local.Runner.IsServer)
+            NetworkPlayer.Local.Runner.Despawn(this.GetComponent<NetworkObject>());
+
+        Destroy(this);
     }
 
     public void CreateExplosionRadiusIndicator()

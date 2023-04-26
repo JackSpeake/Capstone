@@ -7,11 +7,13 @@ using UnityEngine.UI;
 
 public class PlayerItemManager : NetworkBehaviour
 {
-    public delegate void OnSelfUseItem();
-    public delegate void OnThrowItem();
+    public delegate void OnSelfUseItem(NetworkObject obj);
+    public delegate void OnThrowItem(NetworkObject obj);
     public event OnSelfUseItem useItem;
     public event OnThrowItem throwItem;
+    public GameObject prefab;
     public Image itemImage;
+    public bool spawn = true;
 
     // Start is called before the first frame update
     void Start()
@@ -21,20 +23,29 @@ public class PlayerItemManager : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData networkInputData))
+        if (GetInput(out NetworkInputData networkInputData) && NetworkPlayer.Local.Runner.IsServer)
         {
+            NetworkObject obj = null;
             if (networkInputData.selfItemPressed)
             {
                 Debug.Log("Using item");
                 itemImage.sprite = null;
-                useItem?.Invoke();
+                if (spawn)
+                    obj = NetworkPlayer.Local.Runner.Spawn(prefab, new Vector3(transform.position.x, 0f, transform.position.z), Quaternion.identity);
+                useItem?.Invoke(obj);
             }
 
             if (networkInputData.throwItemPressed)
             {
-                Debug.Log("Throwing Item");
+                if (spawn)
+                {
+                    Vector3 initialPosition = transform.position;
+                    obj = NetworkPlayer.Local.Runner.Spawn(prefab, initialPosition, Quaternion.identity);
+                    Debug.Log("Throwing Item");
+                }
+                
                 itemImage.sprite = null;
-                throwItem?.Invoke();
+                throwItem?.Invoke(obj);
             }
         }
     }

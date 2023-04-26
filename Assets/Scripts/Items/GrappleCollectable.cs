@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,7 +26,7 @@ public class GrappleCollectable : MonoBehaviour
 
     }
 
-    private void HoldGrapple()
+    private void HoldGrapple(NetworkObject obj)
     {
         Debug.Log("Grapple used");
         itemManager.useItem -= HoldGrapple;
@@ -37,6 +38,7 @@ public class GrappleCollectable : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
+            itemManager.spawn = false;
 
             if (itemManager.PickUpItem(HoldGrapple, null, grappleSprite))
             {
