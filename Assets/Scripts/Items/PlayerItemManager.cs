@@ -23,7 +23,7 @@ public class PlayerItemManager : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData networkInputData) && NetworkPlayer.Local.Runner.IsServer)
+        if (GetInput(out NetworkInputData networkInputData) && NetworkPlayer.Local.Runner.IsServer && prefab)
         {
             NetworkObject obj = null;
             if (networkInputData.selfItemPressed)

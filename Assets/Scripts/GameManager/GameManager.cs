@@ -84,9 +84,9 @@ public class GameManager : NetworkBehaviour
         {
             Tick elapsedTicks = Runner.Simulation.Tick - initialTick;
             onRaceTimerChanged.Invoke(elapsedTicks / 60f);
-
             if (numPlayersFinished == playersNeeded || gameFinished)
             {
+                gameFinished = true;
                 Debug.Log("The race is over");
                 gameInProgress = false;
                 gameFinished = true;

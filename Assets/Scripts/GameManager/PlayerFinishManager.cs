@@ -24,6 +24,7 @@ public class PlayerFinishManager : MonoBehaviour
     {
         if (hit.collider.CompareTag("Finish") && !alreadyFinished)
         {
+            
             finishPlace = onPlayerFinished.Invoke();
             PlayerCanvasTimersManager playerCanvasTimersManager = GetComponent<PlayerCanvasTimersManager>();
             playerCanvasTimersManager.PlayerFinished(finishPlace);
