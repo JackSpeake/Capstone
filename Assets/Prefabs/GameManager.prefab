@@ -48,7 +48,7 @@ MonoBehaviour:
   spawnBoxPrefab: {fileID: 1288069296209065583, guid: daf9e84a7d743a0418c90aeac077f901, type: 3}
   spawnBoxPosition: {x: -10, y: 0, z: -135}
   playersNeeded: 2
-  countdownSeconds: 10
+  countdownSeconds: 5
 --- !u!114 &2866557403803087078
 MonoBehaviour:
   m_ObjectHideFlags: 0

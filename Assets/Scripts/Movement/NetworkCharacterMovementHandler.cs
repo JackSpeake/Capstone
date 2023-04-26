@@ -303,7 +303,6 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             lockedWallDirection = Vector3.Project(moveDirection, hit.gameObject.transform.right);
             wallSlideTimer = 0.0f;
         }
-        
     }
 
     private void OnTriggerEnter(Collider other)

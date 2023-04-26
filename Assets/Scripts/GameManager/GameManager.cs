@@ -5,11 +5,20 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 
+public struct Placement
+{
+    public float finishTime { get; set; }
+    public int place { get; set; }
+
+    public Placement(float finishTime, int place)
+    {
+        this.finishTime = finishTime;
+        this.place = place;
+    }
+}
+
 public class GameManager : NetworkBehaviour
 {
-    public static List<GameObject> players = new List<GameObject>();
-
-    public static float raceTime = 0f;
     public static bool gameInProgress = false;
     public static bool countdownStarted = false;
 
@@ -18,11 +27,13 @@ public class GameManager : NetworkBehaviour
     public delegate void OnCountdownEnded();
     public delegate void OnRaceTimerChanged(float time);
     public delegate void OnRaceStarted();
+    public delegate void OnRaceEnded();
     public static event OnCountdownStarted onCountdownStarted;
     public static event OnCountdownTimeChanged onCountdownTimeChanged;
     public static event OnCountdownEnded onCountdownEnded;
     public static event OnRaceTimerChanged onRaceTimerChanged;
     public static event OnRaceStarted onRaceStarted;
+    public static event OnRaceEnded onRaceEnded;
 
     [SerializeField] private GameObject spawnBoxPrefab;
     [SerializeField] private Vector3 spawnBoxPosition;
@@ -32,6 +43,8 @@ public class GameManager : NetworkBehaviour
     private Tick initialTick;
     private static TickTimer countdownTimer;
     private static NetworkObject spawnBox;
+    private static List<GameObject> players = new List<GameObject>();
+    private int numPlayersFinished = 0;
 
     private void Awake()
     {
@@ -56,6 +69,7 @@ public class GameManager : NetworkBehaviour
         {
             spawnBox = spawnedBox;
         }
+        PlayerFinishManager.onPlayerFinished += GetFinishPlace;
     }
 
     public override void FixedUpdateNetwork()
@@ -69,7 +83,19 @@ public class GameManager : NetworkBehaviour
         {
             Tick elapsedTicks = Runner.Simulation.Tick - initialTick;
             onRaceTimerChanged.Invoke(elapsedTicks / 60f);
+
+            if (numPlayersFinished == playersNeeded)
+            {
+                Debug.Log("The race is over");
+                gameInProgress = false;
+                onRaceEnded.Invoke();
+            }
         }
+    }
+
+    public static void AddPlayer(GameObject player)
+    {
+        players.Add(player);
     }
 
     public void StartGame()
@@ -81,6 +107,13 @@ public class GameManager : NetworkBehaviour
         onRaceStarted.Invoke();
         gameInProgress = true;
         initialTick = Runner.Simulation.Tick;
+    }
+
+    public Placement GetFinishPlace()
+    {
+        numPlayersFinished++;
+        Tick elapsedTicks = Runner.Simulation.Tick - initialTick;
+        return new Placement(elapsedTicks / 60f, numPlayersFinished);
     }
 
     private IEnumerator StartRaceCountdown()

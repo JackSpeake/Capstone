@@ -6,9 +6,10 @@ using TMPro;
 
 public class PlayerCanvasTimersManager : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI timerText;
-    [SerializeField] private TextMeshProUGUI countdownText;
-    private bool showCountdown;
+    [SerializeField] private TextMeshProUGUI raceTimerText;
+    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI placementText;
+    private Placement finishPlacement;
 
     private void Awake()
     {
@@ -17,6 +18,7 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         GameManager.onCountdownTimeChanged += UpdateCountdownTimer;
         GameManager.onRaceTimerChanged += UpdateTimer;
         GameManager.onRaceStarted += StartTimer;
+        GameManager.onRaceEnded += DisplayFinishTime;
     }
 
     // Start is called before the first frame update
@@ -32,28 +34,55 @@ public class PlayerCanvasTimersManager : MonoBehaviour
 
     public void UpdateCountdownTimer(float time)
     {
-        countdownText.SetText(string.Format("{0}", Mathf.FloorToInt(time)));
+        timeText.SetText($"{Mathf.FloorToInt(time)}");
     }
 
     public void StartCountdownTimer()
     {
-        countdownText.gameObject.SetActive(true);
+        timeText.gameObject.SetActive(true);
     }
 
     public void StopCountdownTimer()
     {
-        countdownText.gameObject.SetActive(false);
+        timeText.gameObject.SetActive(false);
     }
 
     public void StartTimer()
     {
-        timerText.transform.parent.gameObject.SetActive(true);
+        raceTimerText.transform.parent.gameObject.SetActive(true);
+    }
+
+    public void PlayerFinished(Placement finishPlacement)
+    {
+        this.finishPlacement = finishPlacement;
+        placementText.SetText("Finished!");
+        placementText.gameObject.SetActive(true);
+    }
+
+    public void DisplayFinishTime()
+    {
+        int minutes = Mathf.FloorToInt(finishPlacement.finishTime / 60);
+        int seconds = Mathf.FloorToInt(finishPlacement.finishTime % 60);
+        Debug.LogError($"Hello the race ended for {gameObject.transform.name}. They finished {finishPlacement.place}");
+        if (finishPlacement.place == 1)
+        {
+            Debug.Log($"{transform.name} has won!");
+            placementText.SetText($"You Won!");
+
+        }
+        else if (finishPlacement.place == 2)
+        {
+            Debug.Log($"{transform.name} has lost :(");
+            placementText.SetText("You Lost");
+        }
+        timeText.SetText($"Your time: {minutes}:{seconds:D2}");
+        timeText.gameObject.SetActive(true);
     }
 
     private void UpdateTimer(float raceTime)
     {
         int minutes = Mathf.FloorToInt(raceTime / 60);
         int seconds = Mathf.FloorToInt(raceTime % 60);
-        timerText.SetText(string.Format("{0}:{1:D2}", minutes, seconds));
+        raceTimerText.SetText($"{minutes}:{seconds:D2}");
     }
 }

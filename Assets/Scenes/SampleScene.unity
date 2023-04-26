@@ -29508,6 +29508,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: WALL
       objectReference: {fileID: 0}
+    - target: {fileID: 7631928566065852188, guid: cb47e5bddf642a1458408286a154cdaf, type: 3}
+      propertyPath: m_TagString
+      value: Finish
+      objectReference: {fileID: 0}
     - target: {fileID: 7631928566068794441, guid: cb47e5bddf642a1458408286a154cdaf, type: 3}
       propertyPath: m_Mesh
       value: 
