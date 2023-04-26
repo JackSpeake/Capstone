@@ -37,21 +37,23 @@ public class BombCollectible : MonoBehaviour
         
     }
 
-    private void PlaceBomb()
+    private void PlaceBomb(NetworkObject obj)
     {
         Debug.Log("Bomb used");
+        itemManager.spawn = false;
         itemManager.useItem -= PlaceBomb;
         itemManager.throwItem -= ThrowBomb;
-        PlacedBombExplosion();
+        PlacedBombExplosion(obj);
     }
 
-    private void ThrowBomb()
+    private void ThrowBomb(NetworkObject obj)
     {
         Debug.Log("Bomb thrown");
+        itemManager.spawn = false;
         itemManager.throwItem -= ThrowBomb;
         itemManager.useItem -= PlaceBomb;
         //StartCoroutine(ThrownBombExplosion());
-        ThrownBombExplosion();
+        ThrownBombExplosion(obj);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -59,13 +61,15 @@ public class BombCollectible : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
+            itemManager.prefab = bombPrefab;
+            itemManager.spawn = true;
 
             //itemManager.useItem += PlaceBomb;
             //itemManager.throwItem += ThrowBomb;
             if (itemManager.PickUpItem(PlaceBomb, ThrowBomb, bombSprite))
             {
                 playerWithItem = other.gameObject;
-
+                
                 // Make it so no one else can pick up the item, don't wont to SetActive(false) because then the script stops working
                 gameObject.GetComponent<BoxCollider>().enabled = false;
                 gameObject.GetComponent<MeshRenderer>().enabled = false;
@@ -87,38 +91,35 @@ public class BombCollectible : MonoBehaviour
     }
 
 
-    private void PlacedBombExplosion()
+    private void PlacedBombExplosion(NetworkObject obj)
     {
         Debug.Log("Bomb Placed");
-        Vector3 initialPosition = new Vector3(playerWithItem.transform.position.x, 0f, playerWithItem.transform.position.z);
-        GameObject bomb = GameObject.Instantiate(bombPrefab, initialPosition, Quaternion.identity);
-        createdBombScript = bomb.GetComponent<Bomb>();
+        createdBombScript = obj.GetComponent<Bomb>();
         createdBombScript.SetExplosionRadius(placedExposionRadius);
         createdBombScript.CreateExplosionRadiusIndicator();
         itemManager.useItem += ExplodeCreatedBomb;
         itemManager.throwItem += ExplodeCreatedBomb;
+        itemManager.spawn = false;
 
         // after the item has been used, get rid of the collectible
         //gameObject.SetActive(false);
     }
 
-    private void ThrownBombExplosion()
+    private void ThrownBombExplosion(NetworkObject obj)
     {
+        Vector3 throwDirection = NetworkPlayer.Local.transform.forward;
         Debug.Log("Bomb Thrown");
-        Vector3 initialPosition = Camera.main.transform.position;
-        Vector3 throwDirection = Camera.main.transform.forward;
-        Debug.Log(throwDirection);
-        GameObject bomb = GameObject.Instantiate(bombPrefab, initialPosition, Quaternion.identity);
-        createdBombScript = bomb.GetComponent<Bomb>();
-        bomb.GetComponent<Rigidbody>().AddForce(throwDirection * throwForce, ForceMode.Impulse);
+        createdBombScript = obj.GetComponent<Bomb>();
+        obj.GetComponent<Rigidbody>().AddForce(throwDirection * throwForce, ForceMode.Impulse);
         createdBombScript.SetExplosionRadius(thrownExplosionRadius);
         createdBombScript.CreateExplosionRadiusIndicator();
+        itemManager.spawn = false;
 
         itemManager.useItem += ExplodeCreatedBomb;
         itemManager.throwItem += ExplodeCreatedBomb;
     }
 
-    private void ExplodeCreatedBomb()
+    private void ExplodeCreatedBomb(NetworkObject obj)
     {
         createdBombScript.ExplodeBomb();
         itemManager.useItem -= ExplodeCreatedBomb;

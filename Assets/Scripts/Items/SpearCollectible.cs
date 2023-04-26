@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +30,7 @@ public class SpearCollectible : MonoBehaviour
 
     }
 
-    private void UseSpear()
+    private void UseSpear(NetworkObject obj)
     {
         Debug.Log("Spear used");
         itemManager.useItem -= UseSpear;
@@ -37,7 +38,7 @@ public class SpearCollectible : MonoBehaviour
         PlaceSpearAsRamp();
     }
 
-    private void ThrowSpear()
+    private void ThrowSpear(NetworkObject obj)
     {
         Debug.Log("Spear Thrown");
         itemManager.useItem -= UseSpear;
@@ -50,6 +51,7 @@ public class SpearCollectible : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
+            itemManager.spawn = false;
 
             if (itemManager.PickUpItem(UseSpear, ThrowSpear, spearSprite))
             {

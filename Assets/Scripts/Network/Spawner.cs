@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion.Sockets;
 using Fusion;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -84,6 +85,8 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner)
     {
         Debug.Log("Method Call: OnDisconnectedFromServer");
+        SceneManager.LoadScene(0);
+        
     }
 
     void INetworkRunnerCallbacks.OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
