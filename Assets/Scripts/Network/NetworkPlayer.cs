@@ -44,6 +44,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         }
 
         transform.name = $"P_{Object.Id}";
+        GameManager.players.Add(gameObject);
     }
 
     public void PlayerLeft(PlayerRef player)
