@@ -9,8 +9,7 @@ using UnityEngine.SceneManagement;
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     public NetworkPlayer playerPrefab;
-    public GameObject spawnBox;
-    public Vector3 spawnBoxPosition;
+    public GameObject gameManager;
     CharacterInputHandler characterInputHandler;
 
     // Start is called before the first frame update
@@ -24,7 +23,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             Debug.Log("OnPlayerJoined we are server, spawning player.");
-            runner.Spawn(playerPrefab, new Vector3(UnityEngine.Random.Range(spawnBoxPosition.x - 9, spawnBoxPosition.x + 9), 1, spawnBoxPosition.z - 5), Quaternion.identity, player);
+            runner.Spawn(playerPrefab, new Vector3(UnityEngine.Random.Range(-19, -1), 1, -140), Quaternion.identity, player);
         }
         else
         {
@@ -129,12 +128,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner)
     {
         Debug.Log("Method Call: OnSceneLoadDone");
-        NetworkObject spawnedBox = runner.Spawn(spawnBox, spawnBoxPosition, Quaternion.identity);
-        if (spawnedBox != null)
-        {
-            GameManager.spawnBox = spawnedBox;
-            GameManager.networkRunner = runner;
-        }
+        NetworkObject spawnedGameManager = runner.Spawn(gameManager);
     }
 
     void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner)

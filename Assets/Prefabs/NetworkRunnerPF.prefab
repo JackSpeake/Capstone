@@ -59,3 +59,4 @@ MonoBehaviour:
   playerPrefab: {fileID: 4086477494810182419, guid: ea4ad85a2bf590a42bd021ce30bb621b, type: 3}
   spawnBox: {fileID: 1288069296209065583, guid: daf9e84a7d743a0418c90aeac077f901, type: 3}
   spawnBoxPosition: {x: -10, y: 0, z: -135}
+  gameManager: {fileID: 2866557403803087079, guid: 44b9f057955823146abe59e30806076f, type: 3}
