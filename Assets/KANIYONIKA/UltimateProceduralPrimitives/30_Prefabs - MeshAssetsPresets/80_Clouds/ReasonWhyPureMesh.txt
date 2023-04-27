@@ -1,0 +1,5 @@
+
+
+Since the generation of clouds requires machine power, we will place a pure mesh instead of a UPP object.
+
+雲の生成にはマシンパワーを必要とするため、UPPオブジェクトではなく純粋なメッシュを置くことにします。

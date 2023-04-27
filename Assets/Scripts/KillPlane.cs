@@ -13,6 +13,8 @@ public class KillPlane : MonoBehaviour
             NetworkCharacterMovementHandler nCMH = other.GetComponent<NetworkCharacterMovementHandler>();
             Vector3 newPos = nCMH.transform.position;
             newPos.y = teleportHeight;
+            newPos.x = -15;
+            newPos.z = -140;
             nCMH.GetComponent<NetworkCharacterControllerPrototype>().VelMult = 0;
 
             nCMH.TeleportToPosition(newPos);
