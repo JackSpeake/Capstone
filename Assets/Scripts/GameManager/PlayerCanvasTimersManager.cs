@@ -21,6 +21,7 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         GameManager.onRaceTimerChanged += UpdateTimer;
         GameManager.onRaceStarted += StartTimer;
         GameManager.onRaceEnded += DisplayFinishTime;
+        GameManager.onRaceReset += ResetCanvas;
     }
 
     // Start is called before the first frame update
@@ -52,6 +53,15 @@ public class PlayerCanvasTimersManager : MonoBehaviour
     public void StartTimer()
     {
         raceTimerText.transform.parent.gameObject.SetActive(true);
+    }
+
+    public void ResetCanvas()
+    {
+        raceTimerText.transform.parent.gameObject.SetActive(false);
+        timeText.gameObject.SetActive(false);
+        placementText.gameObject.SetActive(false);
+        finishPlacement.finishTime = 0f;
+        finishPlacement.place = 0;
     }
 
     public void PlayerFinished(Placement finishPlacement)

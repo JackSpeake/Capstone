@@ -28,12 +28,14 @@ public class GameManager : NetworkBehaviour
     public delegate void OnRaceTimerChanged(float time);
     public delegate void OnRaceStarted();
     public delegate void OnRaceEnded();
+    public delegate void OnRaceReset();
     public static event OnCountdownStarted onCountdownStarted;
     public static event OnCountdownTimeChanged onCountdownTimeChanged;
     public static event OnCountdownEnded onCountdownEnded;
     public static event OnRaceTimerChanged onRaceTimerChanged;
     public static event OnRaceStarted onRaceStarted;
     public static event OnRaceEnded onRaceEnded;
+    public static event OnRaceReset onRaceReset;
 
     [SerializeField] private GameObject spawnBoxPrefab;
     [SerializeField] private Vector3 spawnBoxPosition;
@@ -65,11 +67,7 @@ public class GameManager : NetworkBehaviour
 
     public override void Spawned()
     {
-        NetworkObject spawnedBox = Runner.Spawn(spawnBoxPrefab, spawnBoxPosition, Quaternion.identity);
-        if (spawnedBox != null)
-        {
-            spawnBox = spawnedBox;
-        }
+        CreateSpawnBox();
         PlayerFinishManager.onPlayerFinished += GetFinishPlace;
     }
 
@@ -91,6 +89,7 @@ public class GameManager : NetworkBehaviour
                 gameInProgress = false;
                 gameFinished = true;
                 onRaceEnded.Invoke();
+                StartCoroutine(testResetGame());
             }
         }
     }
@@ -111,11 +110,37 @@ public class GameManager : NetworkBehaviour
         initialTick = Runner.Simulation.Tick;
     }
 
+    public void ResetGame()
+    {
+        CreateSpawnBox();
+        if (Runner.IsServer)
+        {
+            foreach (GameObject player in players)
+            {
+                NetworkCharacterControllerPrototype networkCharacterControllerPrototype = player.GetComponent<NetworkCharacterControllerPrototype>();
+                networkCharacterControllerPrototype.TeleportToPosition(new Vector3(0, 0, 0), interpolationVel: new Vector3(10, 0, -10));
+            }
+        }
+        numPlayersFinished = 0;
+        gameFinished = false;
+        countdownStarted = false;
+        onRaceReset.Invoke();
+    }
+
     public Placement GetFinishPlace()
     {
         numPlayersFinished++;
         Tick elapsedTicks = Runner.Simulation.Tick - initialTick;
         return new Placement(elapsedTicks / 60f, numPlayersFinished);
+    }
+
+    private void CreateSpawnBox()
+    {
+        NetworkObject spawnedBox = Runner.Spawn(spawnBoxPrefab, spawnBoxPosition, Quaternion.identity);
+        if (spawnedBox != null)
+        {
+            spawnBox = spawnedBox;
+        }
     }
 
     private IEnumerator StartRaceCountdown()
@@ -130,5 +155,11 @@ public class GameManager : NetworkBehaviour
         }
         onCountdownEnded.Invoke();
         StartGame();
+    }
+
+    private IEnumerator testResetGame()
+    {
+        yield return new WaitForSeconds(5f);
+        ResetGame();
     }
 }

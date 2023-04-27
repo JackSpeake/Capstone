@@ -9,6 +9,12 @@ public class PlayerFinishManager : MonoBehaviour
     private Placement finishPlace;
     private bool alreadyFinished = false;
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        GameManager.onRaceReset += ResetFinish;     
+    }
+
     void Start()
     {
         
@@ -20,11 +26,16 @@ public class PlayerFinishManager : MonoBehaviour
         
     }
 
+    public void ResetFinish()
+    {
+        alreadyFinished = false;
+    }
+
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit.collider.CompareTag("Finish") && !alreadyFinished)
         {
-            
+            Debug.Log("Hit the finish object");
             finishPlace = onPlayerFinished.Invoke();
             PlayerCanvasTimersManager playerCanvasTimersManager = GetComponent<PlayerCanvasTimersManager>();
             playerCanvasTimersManager.PlayerFinished(finishPlace);
