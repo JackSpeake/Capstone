@@ -9,6 +9,10 @@ TagManager:
   - HURT
   - GROUND
   - COLLECTABLE
+  - Red
+  - Green
+  - Blue
+  - MainAudio
   layers:
   - Default
   - TransparentFX

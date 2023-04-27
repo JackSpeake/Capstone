@@ -469,6 +469,7 @@ MonoBehaviour:
   slideWarp: 0.1
   jump: {fileID: 8300000, guid: 783ff587265dcb840be93528b639e7d0, type: 3}
   dash: {fileID: 8300000, guid: 9b9874c152fff0a4e9fab7d93cedc97c, type: 3}
+  mixer: {fileID: 0}
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &8276396762777740349
@@ -587,11 +588,11 @@ AudioSource:
   m_GameObject: {fileID: 1501795056821901405}
   m_Enabled: 0
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: dbf9dd14d46353841aea2617a2045cae, type: 2}
   m_audioClip: {fileID: 8300000, guid: 3d92e85d290f48b43a4724ed44723264, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
+  m_Volume: 0.17
+  m_Pitch: -0.7
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -601,7 +602,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
