@@ -75,6 +75,8 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     private float wallSlideTimer = 0.0f; //Keeps track of how long a player has been wall sliding for
     private PostProcessingEffectsController postProcessingEffectsController;
     [SerializeField] private Vector3 TrueVal;
+    private bool teleportOnNextTick;
+    private Vector3 teleportPosition;
 
     private void Awake()
     {
@@ -93,7 +95,12 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out networkInputData))
+        if (teleportOnNextTick)
+        {
+            teleportOnNextTick = false;
+            networkCharacterControllerPrototype.TeleportToPosition(teleportPosition);
+        }
+        else if (GetInput(out networkInputData))
         {
             RotateCharacter();
             // calculate move direction
@@ -270,6 +277,12 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             if (networkInputData.jumpPressed)
                 networkCharacterControllerPrototype.Jump();
         }*/
+    }
+
+    public void TeleportToPosition(Vector3 position)
+    {
+        teleportOnNextTick = true;
+        teleportPosition = position;
     }
 
     public void AddForce(Vector3 direction, float force)

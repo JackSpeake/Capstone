@@ -112,15 +112,15 @@ public class GameManager : NetworkBehaviour
 
     public void ResetGame()
     {
-        CreateSpawnBox();
         if (Runner.IsServer)
         {
             foreach (GameObject player in players)
             {
-                NetworkCharacterControllerPrototype networkCharacterControllerPrototype = player.GetComponent<NetworkCharacterControllerPrototype>();
-                networkCharacterControllerPrototype.TeleportToPosition(new Vector3(0, 0, 0), interpolationVel: new Vector3(10, 0, -10));
+                NetworkCharacterMovementHandler networkCharacterMovementHandler = player.GetComponent<NetworkCharacterMovementHandler>();
+                networkCharacterMovementHandler.TeleportToPosition(Utils.GetRandomSpawnPoint());
             }
         }
+        CreateSpawnBox();
         numPlayersFinished = 0;
         gameFinished = false;
         countdownStarted = false;
