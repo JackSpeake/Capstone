@@ -55,7 +55,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public void Disconnect()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
         //Runner.Disconnect(Local.GetComponent<NetworkObject>().InputAuthority);
     }
 
