@@ -45,6 +45,8 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
     public float standStillShiftSpeed = 20.0f;
     [Tooltip("The speed at which the player moves when sliding")]
     public float slideWarp = .1f;
+    public AudioClip jump;
+    public AudioClip dash;
 
     [Networked]
     [HideInInspector]
@@ -114,6 +116,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
             var newVel = Velocity;
             newVel.y += overrideImpulse ?? jumpImpulse;
             Velocity = newVel;
+            AudioSource.PlayClipAtPoint(jump, gameObject.transform.position);
         }
     }
 
@@ -129,6 +132,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
             Velocity = direction.normalized * standStillShiftSpeed * VelMult;
             VelMult = 1.0f;
         }
+        AudioSource.PlayClipAtPoint(dash, gameObject.transform.position);
     }
 
     /// <summary>

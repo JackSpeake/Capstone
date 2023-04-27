@@ -467,6 +467,8 @@ MonoBehaviour:
   bunnyHopSpeedMax: 1
   standStillShiftSpeed: 20
   slideWarp: 0.1
+  jump: {fileID: 8300000, guid: 783ff587265dcb840be93528b639e7d0, type: 3}
+  dash: {fileID: 8300000, guid: 9b9874c152fff0a4e9fab7d93cedc97c, type: 3}
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &8276396762777740349
