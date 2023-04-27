@@ -54,6 +54,7 @@ public class SpearCollectible : MonoBehaviour
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
             itemManager.spawn = false;
+            itemManager.prefab = spearPrefab;
 
             if (itemManager.PickUpItem(UseSpear, ThrowSpear, spearSprite))
             {

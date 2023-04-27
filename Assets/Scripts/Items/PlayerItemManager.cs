@@ -49,6 +49,11 @@ public class PlayerItemManager : NetworkBehaviour
                 throwItem?.Invoke(obj);
             }
         }
+        else if (prefab && prefab.GetComponent<Grapple>())
+        {
+            NetworkObject obj = null;
+            useItem?.Invoke(obj);
+        }
     }
 
     public bool PickUpItem(OnSelfUseItem selfUseFunc, OnThrowItem throwItemFunc, Sprite image)

@@ -40,6 +40,7 @@ public class GrappleCollectable : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             itemManager = other.gameObject.GetComponent<PlayerItemManager>();
+            itemManager.prefab = grapplePrefab;
             itemManager.spawn = false;
 
             if (itemManager.PickUpItem(HoldGrapple, null, grappleSprite))
