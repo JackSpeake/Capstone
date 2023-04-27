@@ -63,7 +63,6 @@ public class PlayerCanvasTimersManager : MonoBehaviour
     {
         int minutes = Mathf.FloorToInt(finishPlacement.finishTime / 60);
         int seconds = Mathf.FloorToInt(finishPlacement.finishTime % 60);
-        Debug.LogError($"Hello the race ended for {gameObject.transform.name}. They finished {finishPlacement.place}");
         if (finishPlacement.place == 1)
         {
             Debug.Log($"{transform.name} has won!");

@@ -293,7 +293,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.gameObject.CompareTag("WALL") && networkInputData.jumpPressed && !networkCharacterControllerPrototype.IsGrounded)
+        if (hit.gameObject.CompareTag("WALL") && networkInputData.jumpHeld && !networkCharacterControllerPrototype.IsGrounded && state != PlayerState.WallSliding && state != PlayerState.WallJumping)
         {
             Debug.Log("Wall Sliding");
             // wallSliding = true;
