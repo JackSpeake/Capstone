@@ -50,7 +50,6 @@ public class GameManager : NetworkBehaviour
     [Networked] public int numPlayersPlayAgain { get; set; } = 0;
     [Networked] private bool gameReset { get; set; } = false;
     [Networked] private bool gameFinished { get; set; } = false;
-    private bool playAgainPressed = false;
 
     private void Awake()
     {
@@ -77,22 +76,22 @@ public class GameManager : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        Debug.Log($"Number of players played again: {numPlayersPlayAgain}. Reported from host: {Runner.IsServer}");
         if (players.Count == playersNeeded && !gameInProgress && !countdownStarted)
         {
             StartCoroutine(StartRaceCountdown());
         }
 
-        if (playAgainPressed)
-        {
-            numPlayersPlayAgain++;
-            playAgainPressed = false;
-        }
-
         if (numPlayersPlayAgain == playersNeeded || gameReset)
         {
-            gameReset = true;
-            ResetGame();
+            if (Runner.IsServer && !gameReset)
+            {
+                gameReset = true;
+                ResetGame();
+            }
+            else if (Runner.IsClient && gameReset)
+            {
+                ResetGame();
+            }
         }
 
         if (gameInProgress)
@@ -138,10 +137,14 @@ public class GameManager : NetworkBehaviour
             }
 
             CreateSpawnBox();
-            numPlayersFinished = 0;
-            numPlayersPlayAgain = 0;
-            gameFinished = false;
         }
+        else
+        {
+            RPC_SetGameResetFalse();
+        }
+        numPlayersFinished = 0;
+        numPlayersPlayAgain = 0;
+        gameFinished = false;
         countdownStarted = false;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -157,8 +160,14 @@ public class GameManager : NetworkBehaviour
 
     public void PlayAgainPressed()
     {
-        playAgainPressed = true;
-        // numPlayersPlayAgain++;
+        if (Runner.IsServer)
+        {
+            numPlayersPlayAgain++;
+        }
+        else
+        {
+            RPC_IncrementPlayersPlayedAgain();
+        }
     }
 
     private void CreateSpawnBox()
@@ -170,11 +179,22 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetGameResetFalse()
+    {
+        gameReset = false;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_IncrementPlayersPlayedAgain()
+    {
+        numPlayersPlayAgain++;
+    }
+
     private IEnumerator StartRaceCountdown()
     {
         countdownTimer = TickTimer.CreateFromSeconds(Runner, countdownSeconds);
         countdownStarted = true;
-        gameReset = false;
         onCountdownStarted.Invoke();
         for (int i = countdownSeconds; i > 0; i--)
         {
