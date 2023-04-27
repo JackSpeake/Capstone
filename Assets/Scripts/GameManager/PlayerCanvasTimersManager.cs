@@ -132,7 +132,7 @@ public class PlayerCanvasTimersManager : MonoBehaviour
                 placementText.SetText("Waiting for other player...");
             }
             dots = (dots + 1) % 3;
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(1f);
         }
     }
 }

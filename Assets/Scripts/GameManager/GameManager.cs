@@ -48,6 +48,7 @@ public class GameManager : NetworkBehaviour
     private static List<GameObject> players = new List<GameObject>();
     [Networked] private int numPlayersFinished { get; set; } = 0;
     [Networked] private int numPlayersPlayAgain { get; set; } = 0;
+    [Networked] private bool gameReset { get; set; } = false;
     [Networked] private bool gameFinished { get; set; } = false;
 
     private void Awake()
@@ -80,6 +81,12 @@ public class GameManager : NetworkBehaviour
             StartCoroutine(StartRaceCountdown());
         }
 
+        if (numPlayersPlayAgain == playersNeeded || gameReset)
+        {
+            ResetGame();
+            gameReset = true;
+        }
+
         if (gameInProgress)
         {
             Tick elapsedTicks = Runner.Simulation.Tick - initialTick;
@@ -89,7 +96,6 @@ public class GameManager : NetworkBehaviour
                 gameFinished = true;
                 Debug.Log("The race is over");
                 gameInProgress = false;
-                gameFinished = true;
                 onRaceEnded.Invoke();
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
@@ -126,6 +132,7 @@ public class GameManager : NetworkBehaviour
         }
         CreateSpawnBox();
         numPlayersFinished = 0;
+        numPlayersPlayAgain = 0;
         gameFinished = false;
         countdownStarted = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -143,10 +150,6 @@ public class GameManager : NetworkBehaviour
     public void PlayAgainPressed()
     {
         numPlayersPlayAgain++;
-        if (numPlayersPlayAgain == playersNeeded)
-        {
-            ResetGame();
-        }
     }
 
     private void CreateSpawnBox()
@@ -162,6 +165,7 @@ public class GameManager : NetworkBehaviour
     {
         countdownTimer = TickTimer.CreateFromSeconds(Runner, countdownSeconds);
         countdownStarted = true;
+        gameReset = false;
         onCountdownStarted.Invoke();
         for (int i = countdownSeconds; i > 0; i--)
         {
