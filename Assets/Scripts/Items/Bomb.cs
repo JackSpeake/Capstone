@@ -17,6 +17,8 @@ public class Bomb : NetworkBehaviour
     private Rigidbody rb;
     private Vector3 throwForce;
     private bool throwNextUpdate = false;
+    private bool hitGround = false;
+    private Vector3 stayGrounded;
 
     [Networked] private float explosionRadius { get; set; }
 
@@ -46,12 +48,10 @@ public class Bomb : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y <= 0f)
+        if (hitGround)
         {
-            Vector3 stayGrounded = new Vector3(transform.position.x, 0f, transform.position.z);
             transform.position = stayGrounded;
         }
-
     }
 
     public override void FixedUpdateNetwork()
@@ -92,12 +92,10 @@ public class Bomb : NetworkBehaviour
                     Debug.Log("Launching Player");
                 }
             }
-            //AudioSource.PlayClipAtPoint(explosionSfx, gameObject.transform.position);
+            AudioSource.PlayClipAtPoint(explosionSfx, gameObject.transform.position);
         }
 
-        if (NetworkPlayer.Local.Runner.IsServer)
-            NetworkPlayer.Local.Runner.Despawn(this.GetComponent<NetworkObject>());
-        Destroy(this);
+        DespawnBomb();
     }
 
     public void CreateExplosionRadiusIndicator()
@@ -118,11 +116,21 @@ public class Bomb : NetworkBehaviour
         }
     }
 
+    private void DespawnBomb()
+    {
+        if (NetworkPlayer.Local.Runner.IsServer)
+            NetworkPlayer.Local.Runner.Despawn(this.GetComponent<NetworkObject>());
+        Destroy(gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("GROUND"))
+        if (other.gameObject.CompareTag("GROUND") && !throwNextUpdate)
         {
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
+            rb.useGravity = false;
+            hitGround = true;
+            stayGrounded = new Vector3(transform.position.x, transform.position.y - 0.3f, transform.position.z);
             CreateExplosionRadiusIndicator();
         }
     }
