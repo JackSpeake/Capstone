@@ -531,6 +531,7 @@ MonoBehaviour:
   prefab: {fileID: 0}
   itemImage: {fileID: 8953459331376682299}
   spawn: 1
+  noItemImage: {fileID: 21300000, guid: 4958bdb09cfd1ae4c9072be183daf31d, type: 3}
 --- !u!114 &3203865061705113415
 MonoBehaviour:
   m_ObjectHideFlags: 0

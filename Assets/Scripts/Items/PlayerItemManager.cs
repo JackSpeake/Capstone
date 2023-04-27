@@ -14,6 +14,7 @@ public class PlayerItemManager : NetworkBehaviour
     public GameObject prefab;
     public Image itemImage;
     public bool spawn = true;
+    public Sprite noItemImage;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +30,7 @@ public class PlayerItemManager : NetworkBehaviour
             if (networkInputData.selfItemPressed)
             {
                 Debug.Log("Using item");
-                itemImage.sprite = null;
+                itemImage.sprite = noItemImage;
                 if (spawn)
                     obj = NetworkPlayer.Local.Runner.Spawn(prefab, new Vector3(transform.position.x, 0f, transform.position.z), Quaternion.identity);
                 useItem?.Invoke(obj);
@@ -44,7 +45,7 @@ public class PlayerItemManager : NetworkBehaviour
                     Debug.Log("Throwing Item");
                 }
                 
-                itemImage.sprite = null;
+                itemImage.sprite = noItemImage;
                 throwItem?.Invoke(obj);
             }
         }

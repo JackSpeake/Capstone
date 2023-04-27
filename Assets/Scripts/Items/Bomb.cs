@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
-public class Bomb : MonoBehaviour
+public class Bomb : NetworkBehaviour
 {
     [Tooltip("The strength of the explosion (I think this only applies to self use)")]
     public float explosionForce = 20f;
@@ -14,7 +14,7 @@ public class Bomb : MonoBehaviour
     private float width = 0.25f;
     private LineRenderer line;
 
-    private float explosionRadius;
+    [Networked] private float explosionRadius { get; set; }
 
     private void Awake()
     {
@@ -24,12 +24,20 @@ public class Bomb : MonoBehaviour
         line.startWidth = width;
         line.endWidth = width;
         Debug.Log(line);
+        Spawned();
+    }
+
+    private void Start()
+    {
     }
 
     public void SetExplosionRadius(float radius)
     {
         this.explosionRadius = radius;
+        
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -39,6 +47,7 @@ public class Bomb : MonoBehaviour
             Vector3 stayGrounded = new Vector3(transform.position.x, 0f, transform.position.z);
             transform.position = stayGrounded;
         }
+
     }
 
     public void ExplodeBomb()
@@ -94,6 +103,7 @@ public class Bomb : MonoBehaviour
         if (other.gameObject.CompareTag("GROUND"))
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
+            CreateExplosionRadiusIndicator();
         }
     }
 }
