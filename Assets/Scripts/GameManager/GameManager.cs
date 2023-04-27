@@ -47,6 +47,7 @@ public class GameManager : NetworkBehaviour
     private static NetworkObject spawnBox;
     private static List<GameObject> players = new List<GameObject>();
     [Networked] private int numPlayersFinished { get; set; } = 0;
+    [Networked] private int numPlayersPlayAgain { get; set; } = 0;
     [Networked] private bool gameFinished { get; set; } = false;
 
     private void Awake()
@@ -69,6 +70,7 @@ public class GameManager : NetworkBehaviour
     {
         CreateSpawnBox();
         PlayerFinishManager.onPlayerFinished += GetFinishPlace;
+        PlayerCanvasTimersManager.onPlayAgainPressed += PlayAgainPressed;
     }
 
     public override void FixedUpdateNetwork()
@@ -89,7 +91,9 @@ public class GameManager : NetworkBehaviour
                 gameInProgress = false;
                 gameFinished = true;
                 onRaceEnded.Invoke();
-                StartCoroutine(testResetGame());
+                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
+                // StartCoroutine(testResetGame());
             }
         }
     }
@@ -124,6 +128,8 @@ public class GameManager : NetworkBehaviour
         numPlayersFinished = 0;
         gameFinished = false;
         countdownStarted = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         onRaceReset.Invoke();
     }
 
@@ -132,6 +138,15 @@ public class GameManager : NetworkBehaviour
         numPlayersFinished++;
         Tick elapsedTicks = Runner.Simulation.Tick - initialTick;
         return new Placement(elapsedTicks / 60f, numPlayersFinished);
+    }
+
+    public void PlayAgainPressed()
+    {
+        numPlayersPlayAgain++;
+        if (numPlayersPlayAgain == playersNeeded)
+        {
+            ResetGame();
+        }
     }
 
     private void CreateSpawnBox()

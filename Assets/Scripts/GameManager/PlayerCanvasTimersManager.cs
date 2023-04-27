@@ -6,12 +6,17 @@ using TMPro;
 
 public class PlayerCanvasTimersManager : MonoBehaviour
 {
+    public delegate void OnPlayAgainPressed();
+    public static event OnPlayAgainPressed onPlayAgainPressed;
+
     [SerializeField] private TextMeshProUGUI raceTimerText;
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private TextMeshProUGUI placementText;
+    [SerializeField] private Button playAgainButtton;
     public AudioClip win;
     public AudioClip lose;
     private Placement finishPlacement;
+    private bool waitingForOtherPlayer = false;
 
     private void Awake()
     {
@@ -33,6 +38,15 @@ public class PlayerCanvasTimersManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void PlayAgainPressed()
+    {
+        timeText.gameObject.SetActive(false);
+        playAgainButtton.gameObject.SetActive(false);
+        waitingForOtherPlayer = true;
+        StartCoroutine(WaitingForOtherPlayerAnimation());
+        onPlayAgainPressed.Invoke();
     }
 
     public void UpdateCountdownTimer(float time)
@@ -62,6 +76,7 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         placementText.gameObject.SetActive(false);
         finishPlacement.finishTime = 0f;
         finishPlacement.place = 0;
+        waitingForOtherPlayer = false;
     }
 
     public void PlayerFinished(Placement finishPlacement)
@@ -89,6 +104,7 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         }
         timeText.SetText($"Your time: {minutes}:{seconds:D2}");
         timeText.gameObject.SetActive(true);
+        playAgainButtton.gameObject.SetActive(true);
     }
 
     private void UpdateTimer(float raceTime)
@@ -96,5 +112,27 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(raceTime / 60);
         int seconds = Mathf.FloorToInt(raceTime % 60);
         raceTimerText.SetText($"{minutes}:{seconds:D2}");
+    }
+
+    private IEnumerator WaitingForOtherPlayerAnimation()
+    {
+        int dots = 1;
+        while (waitingForOtherPlayer)
+        {
+            if (dots == 1)
+            {
+                placementText.SetText("Waiting for other player.");
+            }
+            else if (dots == 2)
+            {
+                placementText.SetText("Waiting for other player..");
+            }
+            else
+            {
+                placementText.SetText("Waiting for other player...");
+            }
+            dots = (dots + 1) % 3;
+            yield return new WaitForFixedUpdate();
+        }
     }
 }
