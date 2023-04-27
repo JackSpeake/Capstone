@@ -15,7 +15,7 @@ public class Footsteps : MonoBehaviour
 
     public void Update()
     {
-        Debug.Log(networkCharacterControllerPrototype.IsGrounded);
+        //Debug.Log(networkCharacterControllerPrototype.IsGrounded);
         if (networkCharacterControllerPrototype.IsGrounded && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))) 
         {
             footstep.enabled = true;

@@ -11,12 +11,14 @@ public class Grapple : MonoBehaviour
     [Tooltip("How much the player gets slowed down each frame")]
     [SerializeField] private float slowDown = .995f;
     public AudioClip grappleSfx;
+    [SerializeField] private float maxGrapple = 20f;
 
     private GameObject player;
 
     public void StartShootRoutine(GameObject playerObj)
     {
-        player = playerObj;
+        //player = playerObj;
+        player = NetworkPlayer.Local.gameObject;
         StartCoroutine("ShootCoroutine");
     }
 
@@ -28,32 +30,36 @@ public class Grapple : MonoBehaviour
 
         float sinceStart = Time.time;
 
-        Camera cam = transform.parent.GetComponentInChildren<Camera>();
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Camera cam = NetworkPlayer.Local.GetComponentInChildren<Camera>();
+        //Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
 
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrapple))
         {
             if (hit.transform.CompareTag("WALL") )
             {
+
                 objectHit = hit.transform;
                 Debug.Log("Cast hit: " + hit.transform.position);
                 NetworkCharacterControllerPrototype playerController = player.GetComponent<NetworkCharacterControllerPrototype>();
+                //AudioSource.PlayClipAtPoint(grappleSfx, objectHit.position);
+
+                Debug.Log((player.transform.position - objectHit.position).sqrMagnitude);
 
                 while ((player.transform.position - objectHit.position).sqrMagnitude > letGoDistance)
                 {
                     // TODO: Make player item manager know if/when the grapple starts or ends
                     // this would allow the player to have an early exit.
 
-                    if (Time.time - sinceStart > .5f && Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E))
+                    if (Time.time - sinceStart > .5f && (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E)))
                         break;
-
+                    
                     Vector3 dir = objectHit.position - player.transform.position;
                     dir = dir.normalized;
                     playerController.VelMult = speedUp;
                     playerController.ShiftDirection(dir);
                     yield return 0;
-                    AudioSource.PlayClipAtPoint(grappleSfx, objectHit.position);
+                    
                 }
             }
             else if (hit.transform.CompareTag("Player"))
@@ -61,6 +67,8 @@ public class Grapple : MonoBehaviour
                 objectHit = hit.transform;
                 Debug.Log("Cast hit: " + hit.transform.position);
                 NetworkCharacterControllerPrototype playerController = player.GetComponent<NetworkCharacterControllerPrototype>();
+
+                //AudioSource.PlayClipAtPoint(grappleSfx, objectHit.position);
 
                 while ((player.transform.position - objectHit.position).sqrMagnitude > letGoDistance)
                 {
@@ -80,7 +88,7 @@ public class Grapple : MonoBehaviour
                     otherPlayerController.VelMult = slowDown;
                     otherPlayerController.ShiftDirection(dir);
                     yield return 0;
-                    AudioSource.PlayClipAtPoint(grappleSfx, objectHit.position);
+                    
                 }
             }    
         }

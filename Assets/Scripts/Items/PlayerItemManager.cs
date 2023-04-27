@@ -24,36 +24,43 @@ public class PlayerItemManager : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData networkInputData) && NetworkPlayer.Local.Runner.IsServer && prefab)
+        if (GetInput(out NetworkInputData networkInputData))
         {
-            NetworkObject obj = null;
-            if (networkInputData.selfItemPressed)
+            if (NetworkPlayer.Local.Runner.IsServer && prefab && !prefab.GetComponent<Grapple>())
             {
-                Debug.Log("Using item");
-                itemImage.sprite = noItemImage;
-                if (spawn)
-                    obj = NetworkPlayer.Local.Runner.Spawn(prefab, new Vector3(transform.position.x, 0f, transform.position.z), Quaternion.identity);
-                useItem?.Invoke(obj);
-            }
 
-            if (networkInputData.throwItemPressed)
-            {
-                if (spawn)
+                NetworkObject obj = null;
+                if (networkInputData.selfItemPressed)
                 {
-                    Vector3 initialPosition = transform.position;
-                    obj = NetworkPlayer.Local.Runner.Spawn(prefab, initialPosition, Quaternion.identity);
-                    Debug.Log("Throwing Item");
+                    Debug.Log("Using item");
+                    itemImage.sprite = noItemImage;
+                    if (spawn)
+                        obj = NetworkPlayer.Local.Runner.Spawn(prefab, new Vector3(transform.position.x, 0f, transform.position.z), Quaternion.identity);
+                    useItem?.Invoke(obj);
                 }
-                
+
+                if (networkInputData.throwItemPressed)
+                {
+                    if (spawn)
+                    {
+                        Vector3 initialPosition = transform.position;
+                        obj = NetworkPlayer.Local.Runner.Spawn(prefab, initialPosition, Quaternion.identity);
+                        Debug.Log("Throwing Item");
+                    }
+
+                    itemImage.sprite = noItemImage;
+                    throwItem?.Invoke(obj);
+                }
+            }
+            else if (prefab && prefab.GetComponent<Grapple>() && (networkInputData.selfItemPressed || networkInputData.throwItemPressed))
+            {
+                NetworkObject obj = null;
+                useItem?.Invoke(obj);
                 itemImage.sprite = noItemImage;
-                throwItem?.Invoke(obj);
+                prefab = null;
             }
         }
-        else if (prefab && prefab.GetComponent<Grapple>())
-        {
-            NetworkObject obj = null;
-            useItem?.Invoke(obj);
-        }
+        
     }
 
     public bool PickUpItem(OnSelfUseItem selfUseFunc, OnThrowItem throwItemFunc, Sprite image)
@@ -65,7 +72,8 @@ public class PlayerItemManager : NetworkBehaviour
         }
 
         useItem += selfUseFunc;
-        throwItem += throwItemFunc;
+        if (throwItemFunc != null)
+            throwItem += throwItemFunc;
         itemImage.sprite = image;
         Debug.Log("Picked something up");
         return true;

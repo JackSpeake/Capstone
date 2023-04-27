@@ -73,7 +73,7 @@ public class Bomb : NetworkBehaviour
                     Debug.Log("Launching Player");
                 }
             }
-            AudioSource.PlayClipAtPoint(explosionSfx, gameObject.transform.position);
+            //AudioSource.PlayClipAtPoint(explosionSfx, gameObject.transform.position);
         }
 
         if (NetworkPlayer.Local.Runner.IsServer)
