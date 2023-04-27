@@ -20,6 +20,9 @@ public class SpearCollectible : MonoBehaviour
     private GameObject playerWithItem;
     public AudioClip pickup;
     public AudioClip spearToss;
+
+    public GameObject model;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,7 +65,7 @@ public class SpearCollectible : MonoBehaviour
 
                 // Make it so no one else can pick up the item, don't wont to SetActive(false) because then the script stops working
                 gameObject.GetComponent<BoxCollider>().enabled = false;
-                gameObject.GetComponent<MeshRenderer>().enabled = false;
+                model.SetActive(false);
                 StartCoroutine("CauseStartAgain");
             }
             AudioSource.PlayClipAtPoint(pickup, gameObject.transform.position);
@@ -78,7 +81,7 @@ public class SpearCollectible : MonoBehaviour
     public void Respawn()
     {
         gameObject.GetComponent<BoxCollider>().enabled = true;
-        gameObject.GetComponent<MeshRenderer>().enabled = true;
+        model.SetActive(true);
     }
 
     private void PlaceSpearAsRamp()

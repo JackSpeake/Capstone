@@ -16,6 +16,7 @@ public class GrappleCollectable : MonoBehaviour
 
     private PlayerItemManager itemManager;
     private GameObject playerWithItem;
+    public GameObject model;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,7 +50,7 @@ public class GrappleCollectable : MonoBehaviour
 
                 // Make it so no one else can pick up the item, don't wont to SetActive(false) because then the script stops working
                 gameObject.GetComponent<BoxCollider>().enabled = false;
-                gameObject.GetComponent<MeshRenderer>().enabled = false;
+                model.SetActive(true);
                 StartCoroutine("CauseStartAgain");
             }
             AudioSource.PlayClipAtPoint(pickup, gameObject.transform.position);
@@ -65,7 +66,7 @@ public class GrappleCollectable : MonoBehaviour
     public void Respawn()
     {
         gameObject.GetComponent<BoxCollider>().enabled = true;
-        gameObject.GetComponent<MeshRenderer>().enabled = true;
+        model.SetActive(true);
     }
 
     private void GrappleShot()
