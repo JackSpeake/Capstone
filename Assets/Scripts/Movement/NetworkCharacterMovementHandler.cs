@@ -93,6 +93,11 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
         networkObject = this.GetComponent<NetworkObject>();
     }
 
+    public void DashResetFunc()
+    {
+        dashed = false;
+    }
+
     public override void FixedUpdateNetwork()
     {
         if (teleportOnNextTick)
