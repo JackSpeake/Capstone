@@ -78,6 +78,8 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     private bool teleportOnNextTick;
     private Vector3 teleportPosition;
 
+    public int checkpoint = 0;
+
     private void Awake()
     {
         networkCharacterControllerPrototype = GetComponent<NetworkCharacterControllerPrototype>();
