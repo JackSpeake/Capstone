@@ -36,9 +36,10 @@ public class Grapple : MonoBehaviour
 
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, maxGrapple))
         {
+
             if (hit.transform.CompareTag("WALL") )
             {
-
+                AudioSource.PlayClipAtPoint(grappleSfx, gameObject.transform.position);
                 objectHit = hit.transform;
                 Debug.Log("Cast hit: " + hit.transform.position);
                 NetworkCharacterControllerPrototype playerController = player.GetComponent<NetworkCharacterControllerPrototype>();
@@ -59,11 +60,11 @@ public class Grapple : MonoBehaviour
                     playerController.VelMult = speedUp;
                     playerController.ShiftDirection(dir);
                     yield return 0;
-                    
                 }
             }
             else if (hit.transform.CompareTag("Player"))
             {
+                AudioSource.PlayClipAtPoint(grappleSfx, gameObject.transform.position);
                 objectHit = hit.transform;
                 Debug.Log("Cast hit: " + hit.transform.position);
                 NetworkCharacterControllerPrototype playerController = player.GetComponent<NetworkCharacterControllerPrototype>();
@@ -88,7 +89,6 @@ public class Grapple : MonoBehaviour
                     otherPlayerController.VelMult = slowDown;
                     otherPlayerController.ShiftDirection(dir);
                     yield return 0;
-                    
                 }
             }    
         }

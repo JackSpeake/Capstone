@@ -75,7 +75,7 @@ public class GrappleCollectable : MonoBehaviour
         GameObject grapple = GameObject.Instantiate(grapplePrefab, playerWithItem.transform.position, Quaternion.identity);
         grapple.transform.parent = playerWithItem.transform;
         grapple.GetComponent<Grapple>().StartShootRoutine(playerWithItem);
-        AudioSource.PlayClipAtPoint(pickup, gameObject.transform.position);
+        AudioSource.PlayClipAtPoint(grappleSound, gameObject.transform.position);
 
 
         // after the item has been used, get rid of the collectible
