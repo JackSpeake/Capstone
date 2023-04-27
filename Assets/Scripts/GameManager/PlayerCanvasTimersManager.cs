@@ -75,6 +75,7 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         raceTimerText.transform.parent.gameObject.SetActive(false);
         timeText.gameObject.SetActive(false);
         placementText.gameObject.SetActive(false);
+        playAgainButtton.gameObject.SetActive(false);
         finishPlacement.finishTime = 0f;
         finishPlacement.place = 0;
         waitingForOtherPlayer = false;
