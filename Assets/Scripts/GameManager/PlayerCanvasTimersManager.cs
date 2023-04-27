@@ -9,6 +9,8 @@ public class PlayerCanvasTimersManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI raceTimerText;
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private TextMeshProUGUI placementText;
+    public AudioClip win;
+    public AudioClip lose;
     private Placement finishPlacement;
 
     private void Awake()
@@ -67,12 +69,13 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         {
             Debug.Log($"{transform.name} has won!");
             placementText.SetText($"You Won!");
-
-        }
+            AudioSource.PlayClipAtPoint(win, gameObject.transform.position);
+       }
         else if (finishPlacement.place == 2)
         {
             Debug.Log($"{transform.name} has lost :(");
             placementText.SetText("You Lost");
+            AudioSource.PlayClipAtPoint(lose, gameObject.transform.position);
         }
         timeText.SetText($"Your time: {minutes}:{seconds:D2}");
         timeText.gameObject.SetActive(true);

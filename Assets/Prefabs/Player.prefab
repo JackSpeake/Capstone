@@ -688,6 +688,8 @@ MonoBehaviour:
   raceTimerText: {fileID: 7704032709551157159}
   timeText: {fileID: 4308796306557050915}
   placementText: {fileID: 4807388341116012985}
+  win: {fileID: 8300000, guid: ae074102e7c3338458ca4514aa2fc1a7, type: 3}
+  lose: {fileID: 8300000, guid: da8c8e09b29db8b40b9b9be6b2c708dc, type: 3}
 --- !u!114 &-4466518250945618993
 MonoBehaviour:
   m_ObjectHideFlags: 0
