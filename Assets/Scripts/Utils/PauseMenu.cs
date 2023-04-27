@@ -35,7 +35,7 @@ public class PauseMenu : MonoBehaviour
 
         if (paused)
         {
-            Cursor.lockState = CursorLockMode.None;
+            Cursor.lockState = CursorLockMode.Confined;
         }
         else
         {
