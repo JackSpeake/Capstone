@@ -6,7 +6,7 @@ using Fusion;
 public class Bomb : NetworkBehaviour
 {
     [Tooltip("The strength of the explosion (I think this only applies to self use)")]
-    public float explosionForce = 20f;
+    public float explosionForce = 2f;
 
     // Variables related to displaying an indicator for the explosion range of the bomb
     [Tooltip("Number of segments used to display the explosion radius indicator")]
@@ -14,6 +14,9 @@ public class Bomb : NetworkBehaviour
     public AudioClip explosionSfx;
     private float width = 0.25f;
     private LineRenderer line;
+    private Rigidbody rb;
+    private Vector3 throwForce;
+    private bool throwNextUpdate = false;
 
     [Networked] private float explosionRadius { get; set; }
 
@@ -25,6 +28,7 @@ public class Bomb : NetworkBehaviour
         line.startWidth = width;
         line.endWidth = width;
         Debug.Log(line);
+        rb = GetComponent<Rigidbody>();
         Spawned();
     }
 
@@ -35,7 +39,6 @@ public class Bomb : NetworkBehaviour
     public void SetExplosionRadius(float radius)
     {
         this.explosionRadius = radius;
-        
     }
 
     
@@ -51,6 +54,21 @@ public class Bomb : NetworkBehaviour
 
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        if (throwNextUpdate)
+        {
+            rb.AddForce(throwForce, ForceMode.Impulse);
+            throwNextUpdate = false;
+        }
+    }
+
+    public void Throw(Vector3 throwForce)
+    {
+        this.throwForce = throwForce;
+        throwNextUpdate = true;
+    }
+
     public void ExplodeBomb()
     {
         if (gameObject.activeInHierarchy)
@@ -64,11 +82,12 @@ public class Bomb : NetworkBehaviour
                     Debug.Log($"Bomb position: {transform.position}");
                     Debug.Log($"Player Position: {other.transform.position}");
                     float distance = Vector3.Distance(impactPoint, other.transform.position);
-                    float adjustedExplosionForce = (explosionRadius / (2 * distance)) * explosionForce;
+                    // float adjustedExplosionForce = (explosionRadius / (2 * Mathf.Max(distance, 0.5f))) * explosionForce;
+                    float adjustedExplosionForce = (explosionRadius / (explosionRadius * 0.5f * Mathf.Max(distance, 0.5f))) * explosionForce;
+                    adjustedExplosionForce = Mathf.Clamp(adjustedExplosionForce, 1.5f, 2.25f);
                     Vector3 launchDirection = other.transform.position - impactPoint;
                     launchDirection.Normalize();
-                    Debug.Log(launchDirection);
-                    Debug.Log(adjustedExplosionForce);
+                    Debug.Log($"Adjusted explosion force: {adjustedExplosionForce}");
                     other.gameObject.GetComponent<NetworkCharacterMovementHandler>().AddForce(launchDirection, adjustedExplosionForce);
                     Debug.Log("Launching Player");
                 }

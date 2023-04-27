@@ -112,10 +112,11 @@ public class BombCollectible : MonoBehaviour
 
     private void ThrownBombExplosion(NetworkObject obj)
     {
-        Vector3 throwDirection = NetworkPlayer.Local.transform.forward;
+        Camera cam = playerWithItem.transform.GetComponentInChildren<Camera>();
+        Vector3 throwDirection = cam.transform.forward;
         Debug.Log("Bomb Thrown");
         createdBombScript = obj.GetComponent<Bomb>();
-        obj.GetComponent<Rigidbody>().AddForce(throwDirection * throwForce, ForceMode.Impulse);
+        createdBombScript.Throw(throwDirection * throwForce);
         createdBombScript.SetExplosionRadius(thrownExplosionRadius);
         createdBombScript.CreateExplosionRadiusIndicator();
         itemManager.spawn = false;
