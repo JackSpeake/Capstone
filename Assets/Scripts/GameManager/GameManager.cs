@@ -47,7 +47,7 @@ public class GameManager : NetworkBehaviour
     private static NetworkObject spawnBox;
     private static List<GameObject> players = new List<GameObject>();
     [Networked] private int numPlayersFinished { get; set; } = 0;
-    [Networked] private int numPlayersPlayAgain { get; set; } = 0;
+    [Networked] public int numPlayersPlayAgain { get; set; } = 0;
     [Networked] private bool gameReset { get; set; } = false;
     [Networked] private bool gameFinished { get; set; } = false;
     private bool playAgainPressed = false;

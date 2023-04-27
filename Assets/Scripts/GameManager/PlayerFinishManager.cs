@@ -39,6 +39,7 @@ public class PlayerFinishManager : MonoBehaviour
             finishPlace = onPlayerFinished.Invoke();
             PlayerCanvasTimersManager playerCanvasTimersManager = GetComponent<PlayerCanvasTimersManager>();
             playerCanvasTimersManager.PlayerFinished(finishPlace);
+            Cursor.lockState = CursorLockMode.Confined;
             alreadyFinished = true;
         }
     }
