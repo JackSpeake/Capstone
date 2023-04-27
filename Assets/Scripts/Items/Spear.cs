@@ -50,7 +50,7 @@ public class Spear : MonoBehaviour
             rb.useGravity = false;
             capsuleCollider.isTrigger = false;
             hitGround = true;
-            //AudioSource.PlayClipAtPoint(hitSound, other.transform.position);
+            AudioSource.PlayClipAtPoint(hitSound, other.transform.position);
         }
     }
 }

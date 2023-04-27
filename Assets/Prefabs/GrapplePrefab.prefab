@@ -46,4 +46,5 @@ MonoBehaviour:
   letGoDistance: 1
   speedUp: 1.005
   slowDown: 0.995
-  grappleSfx: {fileID: 0}
+  grappleSfx: {fileID: 8300000, guid: 985ce8b69e2f10c48ad7eff4abe5fcd7, type: 3}
+  maxGrapple: 20

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Footsteps : MonoBehaviour
 {
     public AudioSource footstep;
+    public AudioClip dash;
     bool grounded = true;
     NetworkCharacterControllerPrototype networkCharacterControllerPrototype;
 
@@ -23,6 +24,10 @@ public class Footsteps : MonoBehaviour
         else 
         {
             footstep.enabled = false;
+        }
+
+        if (!networkCharacterControllerPrototype.IsGrounded && (Input.GetKeyDown(KeyCode.LeftShift))) {
+            AudioSource.PlayClipAtPoint(dash, gameObject.transform.position);
         }
     }
 }

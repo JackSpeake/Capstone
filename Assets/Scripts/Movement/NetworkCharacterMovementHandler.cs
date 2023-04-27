@@ -79,6 +79,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     private Vector3 teleportPosition;
 
     public int checkpoint = 0;
+    public AudioSource wallslideSfx;
 
     private void Awake()
     {
@@ -125,6 +126,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             switch (state)
             {
                 case PlayerState.Running:
+                    wallslideSfx.enabled = false;
                     networkCharacterControllerPrototype.VelMult =
                         Mathf.Lerp(networkCharacterControllerPrototype.VelMult, basevel, Time.deltaTime * speedReductionRate);
                     if (networkInputData.jumpPressed)
@@ -145,6 +147,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     }
                     break;
                 case PlayerState.WallSliding:
+                    wallslideSfx.enabled = true;
                     postProcessingEffectsController.SetVignetteActive(1.0f);
                     wallSlideTimer += Time.fixedDeltaTime;
                     Debug.Log(wallSlideTimer);
@@ -208,6 +211,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     }
                     break;
                 case PlayerState.WallJumping:
+                    wallslideSfx.enabled = false;
                     if (wallJumpTimer > 0)
                     {
                         moveDirection = wallJumpDirection;
@@ -220,12 +224,15 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     }
                     break;
                 case PlayerState.AirDashing:
+                    wallslideSfx.enabled = false;
                     // I have no idea if anything belongs here based on the old code because it doesn't seem like anything special happens
                     break;
                 case PlayerState.Stumble:
+                    wallslideSfx.enabled = false;
                     AddForce(Vector3.down, 1.0f);
                     break;
                 default:
+                    wallslideSfx.enabled = false;
                     Debug.Log("Something went very wrong here because the player is not in a proper state");
                     break;
             }

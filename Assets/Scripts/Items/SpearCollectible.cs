@@ -114,6 +114,6 @@ public class SpearCollectible : MonoBehaviour
 
         GameObject spear = GameObject.Instantiate(spearPrefab, initialPosition, Quaternion.LookRotation(new Vector3(throwDirection.x, 0f, throwDirection.z)));
         spear.GetComponent<Rigidbody>().AddForce(throwDirection * initialVelocity, ForceMode.Impulse);
-        AudioSource.PlayClipAtPoint(pickup, GameObject.FindGameObjectWithTag("MainCamera").transform.position);
+        AudioSource.PlayClipAtPoint(spearToss, gameObject.transform.position);
     }
 }
