@@ -469,7 +469,6 @@ MonoBehaviour:
   slideWarp: 0.1
   jump: {fileID: 8300000, guid: 783ff587265dcb840be93528b639e7d0, type: 3}
   dash: {fileID: 8300000, guid: 9b9874c152fff0a4e9fab7d93cedc97c, type: 3}
-  mixer: {fileID: 0}
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &8276396762777740349
@@ -591,8 +590,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300002, guid: dbf9dd14d46353841aea2617a2045cae, type: 2}
   m_audioClip: {fileID: 8300000, guid: 3d92e85d290f48b43a4724ed44723264, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.17
-  m_Pitch: -0.7
+  m_Volume: 0.13
+  m_Pitch: -0.6
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -602,7 +601,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -2295,7 +2294,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 7.424591, y: -14.849991}
+  m_AnchoredPosition: {x: 7.4246216, y: -14.849976}
   m_SizeDelta: {x: -614.85, y: -144.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8357433112635416355
