@@ -11,6 +11,7 @@ public class Spear : MonoBehaviour
     CapsuleCollider capsuleCollider;
     bool hitGround = false;
     Vector3 stayGrounded;
+    public AudioClip hitSound;
 
     void Awake()
     {
@@ -49,6 +50,7 @@ public class Spear : MonoBehaviour
             rb.useGravity = false;
             capsuleCollider.isTrigger = false;
             hitGround = true;
+            AudioSource.PlayClipAtPoint(hitSound, other.transform.position);
         }
     }
 }

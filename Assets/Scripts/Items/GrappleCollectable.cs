@@ -11,6 +11,8 @@ public class GrappleCollectable : MonoBehaviour
     public float waitBeforeRespawn = 3f;
     [Tooltip("Grapple sprite")]
     public Sprite grappleSprite;
+    public AudioClip pickup;
+    public AudioClip grappleSound;
 
     private PlayerItemManager itemManager;
     private GameObject playerWithItem;
@@ -49,6 +51,7 @@ public class GrappleCollectable : MonoBehaviour
                 gameObject.GetComponent<MeshRenderer>().enabled = false;
                 StartCoroutine("CauseStartAgain");
             }
+            AudioSource.PlayClipAtPoint(pickup, gameObject.transform.position);
         }
     }
 
@@ -70,6 +73,7 @@ public class GrappleCollectable : MonoBehaviour
         GameObject grapple = GameObject.Instantiate(grapplePrefab, playerWithItem.transform.position, Quaternion.identity);
         grapple.transform.parent = playerWithItem.transform;
         grapple.GetComponent<Grapple>().StartShootRoutine(playerWithItem);
+        AudioSource.PlayClipAtPoint(pickup, GameObject.FindGameObjectWithTag("MainCamera").transform.position);
 
 
         // after the item has been used, get rid of the collectible

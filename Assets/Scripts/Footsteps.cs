@@ -5,10 +5,18 @@ using UnityEngine;
 public class Footsteps : MonoBehaviour
 {
     public AudioSource footstep;
+    bool grounded = true;
+    NetworkCharacterControllerPrototype networkCharacterControllerPrototype;
+
+    public void Awake()
+    {
+        networkCharacterControllerPrototype = GetComponent<NetworkCharacterControllerPrototype>();
+    }
 
     public void Update()
     {
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) 
+        Debug.Log(networkCharacterControllerPrototype.IsGrounded);
+        if (networkCharacterControllerPrototype.IsGrounded && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))) 
         {
             footstep.enabled = true;
         }
