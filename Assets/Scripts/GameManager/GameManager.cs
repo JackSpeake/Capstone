@@ -50,6 +50,7 @@ public class GameManager : NetworkBehaviour
     [Networked] private int numPlayersPlayAgain { get; set; } = 0;
     [Networked] private bool gameReset { get; set; } = false;
     [Networked] private bool gameFinished { get; set; } = false;
+    private bool playAgainPressed = false;
 
     private void Awake()
     {
@@ -76,15 +77,22 @@ public class GameManager : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        Debug.Log($"Number of players played again: {numPlayersPlayAgain}. Reported from host: {Runner.IsServer}");
         if (players.Count == playersNeeded && !gameInProgress && !countdownStarted)
         {
             StartCoroutine(StartRaceCountdown());
         }
 
+        if (playAgainPressed)
+        {
+            numPlayersPlayAgain++;
+            playAgainPressed = false;
+        }
+
         if (numPlayersPlayAgain == playersNeeded || gameReset)
         {
-            ResetGame();
             gameReset = true;
+            ResetGame();
         }
 
         if (gameInProgress)
@@ -99,7 +107,6 @@ public class GameManager : NetworkBehaviour
                 onRaceEnded.Invoke();
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
-                // StartCoroutine(testResetGame());
             }
         }
     }
@@ -129,11 +136,12 @@ public class GameManager : NetworkBehaviour
                 NetworkCharacterMovementHandler networkCharacterMovementHandler = player.GetComponent<NetworkCharacterMovementHandler>();
                 networkCharacterMovementHandler.TeleportToPosition(Utils.GetRandomSpawnPoint());
             }
+
+            CreateSpawnBox();
+            numPlayersFinished = 0;
+            numPlayersPlayAgain = 0;
+            gameFinished = false;
         }
-        CreateSpawnBox();
-        numPlayersFinished = 0;
-        numPlayersPlayAgain = 0;
-        gameFinished = false;
         countdownStarted = false;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -149,7 +157,8 @@ public class GameManager : NetworkBehaviour
 
     public void PlayAgainPressed()
     {
-        numPlayersPlayAgain++;
+        playAgainPressed = true;
+        // numPlayersPlayAgain++;
     }
 
     private void CreateSpawnBox()
@@ -174,11 +183,5 @@ public class GameManager : NetworkBehaviour
         }
         onCountdownEnded.Invoke();
         StartGame();
-    }
-
-    private IEnumerator testResetGame()
-    {
-        yield return new WaitForSeconds(5f);
-        ResetGame();
     }
 }
