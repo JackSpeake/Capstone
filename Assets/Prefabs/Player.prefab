@@ -450,7 +450,7 @@ MonoBehaviour:
     RotBlendEnd: 0.5
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
-  TargetInterpolationDelay: 0.03
+  TargetInterpolationDelay: 0
   gravity: -20
   jumpImpulse: 9
   airAcceleration: 1
