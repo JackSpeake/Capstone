@@ -129,3 +129,5 @@ MonoBehaviour:
   spearSprite: {fileID: 21300000, guid: 3164c4cb49cd3534d8737c894a660b09, type: 3}
   initialVelocity: 20
   yLookDirection: -1
+  pickup: {fileID: 8300000, guid: cfb196d2e8897bf4a8c3f900ab662783, type: 3}
+  spearToss: {fileID: 8300000, guid: c5a717463b6e85942a60933686754448, type: 3}

@@ -21,6 +21,7 @@ public class BombCollectible : MonoBehaviour
     public float waitBeforeRespawn = 3f;
     [Tooltip("Bomb item sprite")]
     public Sprite bombSprite;
+    public AudioClip pickup;
 
     private PlayerItemManager itemManager;
     private GameObject playerWithItem;
@@ -75,6 +76,7 @@ public class BombCollectible : MonoBehaviour
                 gameObject.GetComponent<MeshRenderer>().enabled = false;
                 StartCoroutine("CauseStartAgain");
             }
+            AudioSource.PlayClipAtPoint(pickup, gameObject.transform.position);
         }
     }
 

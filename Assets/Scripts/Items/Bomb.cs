@@ -11,6 +11,7 @@ public class Bomb : NetworkBehaviour
     // Variables related to displaying an indicator for the explosion range of the bomb
     [Tooltip("Number of segments used to display the explosion radius indicator")]
     public int segments = 360;
+    public AudioClip explosionSfx;
     private float width = 0.25f;
     private LineRenderer line;
 
@@ -72,11 +73,11 @@ public class Bomb : NetworkBehaviour
                     Debug.Log("Launching Player");
                 }
             }
+            AudioSource.PlayClipAtPoint(explosionSfx, gameObject.transform.position);
         }
 
         if (NetworkPlayer.Local.Runner.IsServer)
             NetworkPlayer.Local.Runner.Despawn(this.GetComponent<NetworkObject>());
-
         Destroy(this);
     }
 

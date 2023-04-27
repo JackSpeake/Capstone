@@ -10,6 +10,7 @@ public class Grapple : MonoBehaviour
     [SerializeField] private float speedUp = 1.005f;
     [Tooltip("How much the player gets slowed down each frame")]
     [SerializeField] private float slowDown = .995f;
+    public AudioClip grappleSfx;
 
     private GameObject player;
 
@@ -52,6 +53,7 @@ public class Grapple : MonoBehaviour
                     playerController.VelMult = speedUp;
                     playerController.ShiftDirection(dir);
                     yield return 0;
+                    AudioSource.PlayClipAtPoint(grappleSfx, objectHit.position);
                 }
             }
             else if (hit.transform.CompareTag("Player"))
@@ -78,6 +80,7 @@ public class Grapple : MonoBehaviour
                     otherPlayerController.VelMult = slowDown;
                     otherPlayerController.ShiftDirection(dir);
                     yield return 0;
+                    AudioSource.PlayClipAtPoint(grappleSfx, objectHit.position);
                 }
             }    
         }

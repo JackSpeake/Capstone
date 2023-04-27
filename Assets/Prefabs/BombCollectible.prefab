@@ -117,6 +117,7 @@ MonoBehaviour:
   bombPrefab: {fileID: 1605200299544276317, guid: 7bb33167539ce6e419efa817c4d49da3, type: 3}
   waitBeforeRespawn: 3
   bombSprite: {fileID: 21300000, guid: 7970085588b0db24aba31f5de9587934, type: 3}
+  pickup: {fileID: 8300000, guid: cfb196d2e8897bf4a8c3f900ab662783, type: 3}
 --- !u!114 &7969525227825656578
 MonoBehaviour:
   m_ObjectHideFlags: 0

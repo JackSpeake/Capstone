@@ -109,3 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grapplePrefab: {fileID: 2209972206270404955, guid: f442b58ec35934f4590d7b0afe3366bb, type: 3}
+  waitBeforeRespawn: 3
+  grappleSprite: {fileID: 0}
+  pickup: {fileID: 8300000, guid: cfb196d2e8897bf4a8c3f900ab662783, type: 3}
+  grappleSound: {fileID: 8300000, guid: 985ce8b69e2f10c48ad7eff4abe5fcd7, type: 3}
