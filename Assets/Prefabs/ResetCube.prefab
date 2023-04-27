@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fec3f82f6dd152b44ac77e809b965dba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickup: {fileID: 0}
+  pickup: {fileID: 8300000, guid: e4ce6fd1a0ec2034f80c862ac45d11b3, type: 3}
   waitBeforeRespawn: 2
 --- !u!33 &1246146675634690930
 MeshFilter:
