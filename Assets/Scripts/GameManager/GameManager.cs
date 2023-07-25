@@ -89,7 +89,7 @@ public class GameManager : NetworkBehaviour
                 ResetGame();
             }
             else if (Runner.IsClient && gameReset)
-            {
+            { 
                 ResetGame();
             }
         }

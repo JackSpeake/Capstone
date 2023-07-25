@@ -8,7 +8,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public static NetworkPlayer Local { get; set; }
 
-    public Transform playerModel;
+    public Transform playerModel; 
 
     
 

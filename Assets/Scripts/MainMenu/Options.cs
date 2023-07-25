@@ -32,6 +32,11 @@ public class Options : MonoBehaviour
         mixer.SetFloat("MasterVolume", Mathf.Log10(sliderValue) * 20);
     }
 
+    public void ToggleFullscreen(bool input)
+    {
+        Screen.fullScreen = input;
+    }    
+
     public void optionsClick()
     {
         optionsPanel.SetActive(true);

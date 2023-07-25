@@ -15,7 +15,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        
+         
     }
 
     void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef player)

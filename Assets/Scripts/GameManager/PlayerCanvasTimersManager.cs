@@ -45,7 +45,7 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         timeText.gameObject.SetActive(false);
         playAgainButtton.gameObject.SetActive(false);
         waitingForOtherPlayer = true;
-        StartCoroutine(WaitingForOtherPlayerAnimation());
+        StartCoroutine(WaitingForOtherPlayerAnimation()); 
         Cursor.lockState = CursorLockMode.None;
         onPlayAgainPressed.Invoke();
     }
