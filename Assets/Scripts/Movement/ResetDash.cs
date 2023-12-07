@@ -14,6 +14,7 @@ public class ResetDash : MonoBehaviour
             NetworkCharacterMovementHandler nCMH = other.GetComponent<NetworkCharacterMovementHandler>();
             nCMH.DashResetFunc();
             this.GetComponent<MeshRenderer>().enabled = false;
+            this.GetComponentInChildren<ParticleSystem>().Stop();
             AudioSource.PlayClipAtPoint(pickup, gameObject.transform.position);
         }
     }
@@ -27,6 +28,7 @@ public class ResetDash : MonoBehaviour
     public void Respawn()
     {
         gameObject.GetComponent<BoxCollider>().enabled = true;
+        this.GetComponentInChildren<ParticleSystem>().Play();
         this.GetComponent<MeshRenderer>().enabled = true;
     }
 }

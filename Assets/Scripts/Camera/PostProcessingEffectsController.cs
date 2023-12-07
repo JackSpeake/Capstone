@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PostProcessingEffectsController : MonoBehaviour
 {
@@ -12,18 +14,32 @@ public class PostProcessingEffectsController : MonoBehaviour
     [Tooltip("Color of the vignette")]
     private Color tintColor;
     private float vignetteActive = 0.0f; // shaders don't support bools, so using a float instead
+    Vignette currVignette;
+
 
     public void SetColor(Color tintColor)
     {
         this.tintColor = tintColor;
+        this.tintColor.a = 1;
+        if (currVignette)
+            currVignette.color.value = this.tintColor;
+            
     }
 
-    public void SetVignetteActive(float active)
+    public void SetVignetteActive(float active, Volume volume)
     {
-        this.vignetteActive = active;
+        Vignette tmp;
+        if (volume && volume.sharedProfile.TryGet<Vignette>(out tmp))
+        {
+            Debug.Log("Work pog!!!");
+            currVignette = tmp;
+            currVignette.active = (active == 1.0);
+            currVignette.color = new ColorParameter(tintColor, true, true, false, true);
+            // currVignette.
+        }
     }
 
-    private void OnRenderImage(RenderTexture source, RenderTexture destination)
+    /*private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         int width = source.width;
         int height = source.height;
@@ -39,5 +55,5 @@ public class PostProcessingEffectsController : MonoBehaviour
         Graphics.Blit(source, startRenderTexture, postProcessingEffectsMaterial);
         Graphics.Blit(startRenderTexture, destination);
         RenderTexture.ReleaseTemporary(startRenderTexture);
-    }
+    }*/
 }

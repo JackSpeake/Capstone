@@ -34,8 +34,9 @@ public class PlayerItemManager : NetworkBehaviour
                 {
                     Debug.Log("Using item");
                     itemImage.sprite = noItemImage;
+                    // I am not sure why this is different than below (0f?)
                     if (spawn)
-                        obj = NetworkPlayer.Local.Runner.Spawn(prefab, new Vector3(transform.position.x, 0f, transform.position.z), Quaternion.identity);
+                        obj = NetworkPlayer.Local.Runner.Spawn(prefab, transform.position, Quaternion.identity);
                     useItem?.Invoke(obj);
                 }
 

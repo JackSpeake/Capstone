@@ -13,15 +13,16 @@ TagManager:
   - Green
   - Blue
   - MainAudio
+  - NoPostCamera
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Camera
   - Water
   - UI
   - LocalPlayerModel
-  - 
+  - NoPostCamera
   - 
   - 
   - 

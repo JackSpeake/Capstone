@@ -7,8 +7,13 @@ public class PlayerFinishManager : MonoBehaviour
     public delegate Placement OnPlayerFinished();
     public static event OnPlayerFinished onPlayerFinished;
     private Placement finishPlace;
-    private bool alreadyFinished = false; 
+    private bool alreadyFinished = false;
     // Start is called before the first frame update
+
+    public static void ResetEvent()
+    {
+        onPlayerFinished = null;
+    }
 
     private void Awake()
     {

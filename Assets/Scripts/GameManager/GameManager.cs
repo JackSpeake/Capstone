@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 using Fusion.Sockets;
 using System;
+using UnityEngine.SceneManagement;
 
 public struct Placement
 {
@@ -40,7 +41,7 @@ public class GameManager : NetworkBehaviour
     [SerializeField] private GameObject spawnBoxPrefab;
     [SerializeField] private Vector3 spawnBoxPosition;
 
-    [SerializeField] private int playersNeeded = 2;
+    [Networked] public int playersNeeded { get; set; } = 2;
     [SerializeField] private int countdownSeconds = 10;
     private Tick initialTick;
     private static TickTimer countdownTimer;
@@ -51,33 +52,45 @@ public class GameManager : NetworkBehaviour
     [Networked] private bool gameReset { get; set; } = false;
     [Networked] private bool gameFinished { get; set; } = false;
 
+    public static bool newMapToggled = false;
+    private bool spawned = false;
+    public int playercount = 0;
+    public static bool waitingToStart = true;
+
     private void Awake()
     {
+        players.Clear();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        waitingToStart = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        playercount = players.Count;
     }
+
+
 
     public override void Spawned()
     {
+        Debug.Log("SPAWNED!!");
+        playersNeeded = FindObjectOfType<Spawner>().MaxPlayers;
         CreateSpawnBox();
         PlayerFinishManager.onPlayerFinished += GetFinishPlace;
         PlayerCanvasTimersManager.onPlayAgainPressed += PlayAgainPressed;
+        spawned = true;
     }
 
     public override void FixedUpdateNetwork()
     {
         if (players.Count == playersNeeded && !gameInProgress && !countdownStarted)
         {
+            waitingToStart = false;
             StartCoroutine(StartRaceCountdown());
         }
 
@@ -149,7 +162,63 @@ public class GameManager : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         onRaceReset.Invoke();
+        waitingToStart = true;
+
+        if (Runner.IsServer && newMapToggled)
+        {
+            players.Clear();
+            gameInProgress = false;
+            countdownStarted = false;
+            onCountdownStarted = null;
+            onCountdownTimeChanged = null;
+            onCountdownEnded = null;
+            onRaceTimerChanged = null;
+            onRaceStarted = null;
+            onRaceEnded = null;
+            onRaceReset = null;
+            PlayerCanvasTimersManager.ResetEvent();
+            PlayerFinishManager.ResetEvent();
+            int CurrentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+            int MapOneIndex = SceneUtility.GetBuildIndexByScenePath("Scenes/SampleScene");
+            int MapTwoIndex = SceneUtility.GetBuildIndexByScenePath("Scenes/LevelTwo");
+            int MapThreeIndex = SceneUtility.GetBuildIndexByScenePath("Scenes/LevelThree");
+
+            if (CurrentSceneIndex == MapOneIndex)
+            {
+                Runner.SetActiveScene(MapTwoIndex);
+            }
+            else if (CurrentSceneIndex == MapTwoIndex)
+            {
+                Runner.SetActiveScene(MapThreeIndex);
+            }
+            else
+            {
+                Runner.SetActiveScene(MapOneIndex);
+            }
+        }
     }
+
+    public static void Disconnect()
+    {
+        countdownStarted = false;
+        waitingToStart = true;
+
+        
+            players.Clear();
+            gameInProgress = false;
+            countdownStarted = false;
+            onCountdownStarted = null;
+            onCountdownTimeChanged = null;
+            onCountdownEnded = null;
+            onRaceTimerChanged = null;
+            onRaceStarted = null;
+       onRaceEnded = null;
+       onRaceReset = null;
+        PlayerCanvasTimersManager.ResetEvent();
+        PlayerFinishManager.ResetEvent();
+    }
+
+
 
     public Placement GetFinishPlace()
     {

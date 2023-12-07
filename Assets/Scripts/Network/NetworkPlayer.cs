@@ -55,6 +55,9 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public void Disconnect()
     {
+        Runner.Shutdown();
+        Cursor.lockState = CursorLockMode.Confined;
+        GameManager.Disconnect();
         SceneManager.LoadScene(0);
         //Runner.Disconnect(Local.GetComponent<NetworkObject>().InputAuthority);
     }

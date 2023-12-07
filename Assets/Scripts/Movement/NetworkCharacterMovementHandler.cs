@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Fusion;
 using System;
 using Photon;
+using UnityEngine.Rendering;
 
 enum PlayerState
 {
@@ -69,6 +70,8 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     [SerializeField] private Image crosshair;
     [Tooltip("The speedometer attached to the player")]
     [SerializeField] private Slider speedometer;
+    [SerializeField] private Color dashReady, dashUsed;
+    [SerializeField] private Image speedometerFillColorImage;
     private Color initialCrosshairColor;
     private Vector3 wallJumpDirection;
     private float wallJumpTimer; // Keeps track of how long it's been since the player jumped off the wall
@@ -77,6 +80,8 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     [SerializeField] private Vector3 TrueVal;
     private bool teleportOnNextTick;
     private Vector3 teleportPosition;
+    private GameObject currWall;
+    private Volume touching;
 
     public int checkpoint = 0;
     public AudioSource wallslideSfx;
@@ -115,11 +120,19 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             moveDirection = transform.forward * networkInputData.movementInput.y + transform.right * networkInputData.movementInput.x;
             moveDirection.Normalize();
             speedometer.value = networkCharacterControllerPrototype.Velocity.magnitude * 2f;
+            if (dashed)
+            {
+                speedometerFillColorImage.color = dashUsed;
+            }
+            else
+            {
+                speedometerFillColorImage.color = dashReady;
+            }
             if (networkCharacterControllerPrototype.IsGrounded)
             {
                 dashed = false;
                 state = PlayerState.Running;
-                postProcessingEffectsController.SetVignetteActive(0.0f);
+                postProcessingEffectsController.SetVignetteActive(0.0f, touching);
                 crosshair.color = initialCrosshairColor;
                 networkCharacterControllerPrototype.gravity = regularGraviity;
             }
@@ -148,7 +161,7 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     break;
                 case PlayerState.WallSliding:
                     wallslideSfx.enabled = true;
-                    postProcessingEffectsController.SetVignetteActive(1.0f);
+                    postProcessingEffectsController.SetVignetteActive(1.0f, touching);
                     wallSlideTimer += Time.fixedDeltaTime;
                     Debug.Log(wallSlideTimer);
                     moveDirection = lockedWallDirection;
@@ -195,9 +208,16 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
                     if (!networkInputData.jumpHeld)
                     {
                         // wallSliding = false;
-                        postProcessingEffectsController.SetVignetteActive(0.0f);
+                        postProcessingEffectsController.SetVignetteActive(0.0f, touching);
                         crosshair.color = initialCrosshairColor;
                         state = PlayerState.WallJumping;
+
+                        if (currWall)
+                        {
+                            currWall.GetComponent<FloatAndRotate>().PlayerCollideStop();
+                            currWall = null;
+                        }
+                            
                         networkCharacterControllerPrototype.gravity = regularGraviity;
                         wallJumpTimer = wallJumpTime;
                         wallJumpDirection = TrueVal;
@@ -322,6 +342,9 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
     {
         if (hit.gameObject.CompareTag("WALL") && networkInputData.jumpHeld && !networkCharacterControllerPrototype.IsGrounded && state != PlayerState.WallSliding && state != PlayerState.WallJumping)
         {
+            hit.gameObject.GetComponent<FloatAndRotate>().PlayerCollided();
+            touching = hit.gameObject.GetComponent<Volume>();
+            currWall = hit.gameObject;
             Debug.Log("Wall Sliding");
             // wallSliding = true;
             state = PlayerState.WallSliding;
@@ -330,7 +353,16 @@ public class NetworkCharacterMovementHandler : NetworkBehaviour
             lockedWallDirection = Vector3.Project(moveDirection, hit.gameObject.transform.right);
             wallSlideTimer = 0.0f;
         }
-    }
+
+        if (hit.gameObject.CompareTag("WALL") || hit.gameObject.CompareTag("GROUND"))
+        {
+            GooablePlatform gooPlat = hit.gameObject.GetComponent<GooablePlatform>();
+            if (gooPlat && gooPlat.gooed)
+                networkCharacterControllerPrototype.startedTouchingGoo(gooPlat);
+            else if (!gooPlat || !gooPlat.gooed)
+                networkCharacterControllerPrototype.stoppedTouchingGoo();
+        }
+    } 
 
     private void OnTriggerEnter(Collider other)
     {

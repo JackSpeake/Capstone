@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Fusion;
 
-public class PlayerCanvasTimersManager : MonoBehaviour
+public class PlayerCanvasTimersManager : NetworkBehaviour
 {
     public delegate void OnPlayAgainPressed();
     public static event OnPlayAgainPressed onPlayAgainPressed;
@@ -13,10 +14,12 @@ public class PlayerCanvasTimersManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private TextMeshProUGUI placementText;
     [SerializeField] private Button playAgainButtton;
+    [SerializeField] private TextMeshProUGUI WaitingForOtherPlayersStartText;
     public AudioClip win;
     public AudioClip lose;
     private Placement finishPlacement;
     private bool waitingForOtherPlayer = false;
+    [SerializeField] private Toggle newMapToggle;
 
     private void Awake()
     {
@@ -29,14 +32,18 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         GameManager.onRaceReset += ResetCanvas;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public static void ResetEvent()
     {
+        onPlayAgainPressed = null;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.waitingToStart)
+            WaitingForOtherPlayersStartText.gameObject.SetActive(true);
+        else
+            WaitingForOtherPlayersStartText.gameObject.SetActive(false);
 
     }
 
@@ -47,6 +54,8 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         waitingForOtherPlayer = true;
         StartCoroutine(WaitingForOtherPlayerAnimation()); 
         Cursor.lockState = CursorLockMode.None;
+        if (Runner.IsServer)
+            GameManager.newMapToggled = newMapToggle.isOn;
         onPlayAgainPressed.Invoke();
     }
 
@@ -107,6 +116,9 @@ public class PlayerCanvasTimersManager : MonoBehaviour
         timeText.SetText($"Your time: {minutes}:{seconds:D2}");
         timeText.gameObject.SetActive(true);
         playAgainButtton.gameObject.SetActive(true);
+
+        if (Runner.IsServer)
+            newMapToggle.gameObject.SetActive(true);
     }
 
     private void UpdateTimer(float raceTime)

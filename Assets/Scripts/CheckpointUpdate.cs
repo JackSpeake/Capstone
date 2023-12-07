@@ -8,10 +8,8 @@ public class CheckpointUpdate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("POG");
         if (other.CompareTag("Player"))
         {
-            Debug.Log("POG");
             other.GetComponent<NetworkCharacterMovementHandler>().checkpoint = checkpoint;
         }
     }

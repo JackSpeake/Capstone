@@ -11,11 +11,16 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkPlayer playerPrefab;
     public GameObject gameManager;
     CharacterInputHandler characterInputHandler;
+    SessionListUIHandler sessionListUIHandler;
+    public int MaxPlayers = 2;
+    private bool firstSpawn = true;
+    private NetworkObject spawnedGameManager;
+
 
     // Start is called before the first frame update
     void Start()
     {
-         
+        sessionListUIHandler = FindObjectOfType<SessionListUIHandler>(true);
     }
 
     void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef player)
@@ -24,6 +29,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             Debug.Log("OnPlayerJoined we are server, spawning player.");
             runner.Spawn(playerPrefab, Utils.GetRandomSpawnPoint(), Quaternion.identity, player);
+            firstSpawn = false;
         }
         else
         {
@@ -44,6 +50,28 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             else if (o.GetComponent<SpearCollectible>() != null)
             {
                 o.GetComponent<SpearCollectible>().Respawn();
+            }
+        }
+    }
+
+    void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner)
+    {
+        runner.Despawn(spawnedGameManager);
+    }
+
+
+    void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner)
+    {
+        Debug.Log("Method Call: OnSceneLoadDone");
+        spawnedGameManager = runner.Spawn(gameManager);
+
+        
+
+        if (runner.IsServer && !firstSpawn)
+        {
+            foreach (PlayerRef p in runner.ActivePlayers)
+            {
+                runner.Spawn(playerPrefab, Utils.GetRandomSpawnPoint(), Quaternion.identity, p)/*.Spawned()*/;
             }
         }
     }
@@ -76,6 +104,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
         Debug.Log("Method Call: OnShutdown");
+        NetworkPlayer.Local.Disconnect();
     }
 
     void INetworkRunnerCallbacks.OnConnectedToServer(NetworkRunner runner)
@@ -108,6 +137,23 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     void INetworkRunnerCallbacks.OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
         FindObjectOfType<NetworkRunnerHandler>().sessions = sessionList;
+
+        if (sessionListUIHandler == null)
+            return;
+
+        if (sessionList.Count == 0)
+        {
+            sessionListUIHandler.OnNoSessionFound();
+        }
+        else
+        {
+            sessionListUIHandler.ClearList();
+
+            foreach (SessionInfo sessionInfo in sessionList)
+            {
+                sessionListUIHandler.AddToList(sessionInfo);
+            }
+        }
     }
 
     void INetworkRunnerCallbacks.OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
@@ -125,14 +171,4 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log("Method Call: OnReliableDataReceived");
     }
 
-    void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner)
-    {
-        Debug.Log("Method Call: OnSceneLoadDone");
-        NetworkObject spawnedGameManager = runner.Spawn(gameManager);
-    }
-
-    void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner)
-    {
-        Debug.Log("Method Call: OnSceneLoadStart");
-    }
 }

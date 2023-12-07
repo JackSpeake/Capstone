@@ -46,6 +46,9 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
     [Tooltip("The speed at which the player moves when sliding")]
     public float slideWarp = .1f;
     public AudioClip jump;
+    private float gooSpeed = 1;
+
+    private float normalSlideWarp, normalGroundAcceleration, normalGroundBreaking;
 
     [Networked]
     [HideInInspector]
@@ -73,12 +76,39 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
     {
         base.Awake();
         CacheController();
+
+        normalGroundAcceleration = groundAcceleration;
+        normalSlideWarp = slideWarp;
+        normalGroundBreaking = Groundbraking;
     }
 
     public override void Spawned()
     {
         base.Spawned();
         CacheController();
+    }
+
+    public void startedTouchingGoo(GooablePlatform gp)
+    {
+        gooSpeed = gp.speedChange;
+        /*if (slideWarp == normalSlideWarp)
+        {
+            normalGroundAcceleration = groundAcceleration;
+            normalSlideWarp = slideWarp;
+            normalGroundBreaking = Groundbraking;
+
+            slideWarp *= gp.speedChange;
+            groundAcceleration *= gp.speedChange;
+            Groundbraking /= gp.speedChange;
+        }*/
+    }
+
+    public void stoppedTouchingGoo()
+    {
+        gooSpeed = 1;
+        /*slideWarp = normalSlideWarp;
+        groundAcceleration = normalGroundAcceleration;
+        Groundbraking = normalGroundBreaking;*/
     }
 
     private void CacheController()
@@ -162,7 +192,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
         horizontalVel.x = moveVelocity.x;
 
         horizontalVel.z = moveVelocity.z;
-        horizontalVel *= VelMult;
+        horizontalVel *= VelMult * gooSpeed;
         VelMult = 1.0f;
 
         if (direction == default)
@@ -177,7 +207,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
             {
                 // Project the new speed direction onto the right/left vector
 
-                newSpeed = newSpeed * slideWarp;
+                newSpeed = newSpeed * slideWarp * gooSpeed;
             }
             horizontalVel = Vector3.ClampMagnitude(horizontalVel + newSpeed, maxSpeed);
             //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
