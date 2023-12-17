@@ -16,6 +16,7 @@ public class ResetDash : MonoBehaviour
             this.GetComponent<MeshRenderer>().enabled = false;
             this.GetComponentInChildren<ParticleSystem>().Stop();
             AudioSource.PlayClipAtPoint(pickup, gameObject.transform.position);
+            StartCoroutine("CauseStartAgain");
         }
     }
 

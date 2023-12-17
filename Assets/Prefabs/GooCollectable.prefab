@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51feedd213bf5314ba8a54c55db00321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwForce: 5
+  throwForce: 20
   waitBeforeRespawn: 8
   gooSprite: {fileID: 21300000, guid: f7451c3b5dacbb144bbe4d180ea13f48, type: 3}
   pickup: {fileID: 8300000, guid: cfb196d2e8897bf4a8c3f900ab662783, type: 3}
